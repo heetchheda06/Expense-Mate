@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  # MongoDB Local Database container
+  mongo:
+    image: mongo:latest
+    container_name: expensemate_db
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - expensemate_net
+
+  # Express Backend API container
+  server:
+    build: ./server
+    container_name: expensemate_api
+    ports:
+      - "5000:5000"
+    environment:
+      - PORT=5000
+      - NODE_ENV=production
+      - MONGODB_URI=mongodb://mongo:27017/expensemate
+      - JWT_SECRET=expensemate_docker_production_sec_12345
+      - FRONTEND_URL=http://localhost:8080
+    depends_on:
+      - mongo
+    networks:
+      - expensemate_net
+
+  # React Frontend Client container
+  client:
+    build: ./client
+    container_name: expensemate_web
+    ports:
+      - "8080:8080"
+    environment:
+      - VITE_API_URL=http://localhost:5000
+    depends_on:
+      - server
+    networks:
+      - expensemate_net
+
+networks:
+  expensemate_net:
+    driver: bridge
+
+volumes:
+  mongo_data:
