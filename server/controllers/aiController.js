@@ -377,23 +377,42 @@ Use this context to answer their questions. Keep your answers concise, encouragi
       parts: [{ text: message }]
     });
 
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        systemInstruction: {
-          parts: [{ text: systemPrompt }]
-        },
-        contents
-      })
-    });
+    const modelsToTry = ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-flash-latest'];
+    let response;
+    let success = false;
+    let lastError = null;
 
-    if (!response.ok) {
-      const errBody = await response.text();
-      console.error('Gemini API Error details:', errBody);
-      throw new Error(`Gemini API returned status ${response.status}`);
+    for (const model of modelsToTry) {
+      try {
+        response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            systemInstruction: {
+              parts: [{ text: systemPrompt }]
+            },
+            contents
+          })
+        });
+
+        if (response.ok) {
+          success = true;
+          break;
+        } else {
+          const errBody = await response.text();
+          console.warn(`Gemini API model ${model} failed with status ${response.status}:`, errBody);
+          lastError = new Error(`Gemini API returned status ${response.status}`);
+        }
+      } catch (err) {
+        console.error(`Fetch error for model ${model}:`, err.message);
+        lastError = err;
+      }
+    }
+
+    if (!success) {
+      throw lastError || new Error('All Gemini models failed to generate response');
     }
 
     const data = await response.json();

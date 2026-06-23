@@ -2,7 +2,43 @@ import React, { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useProfiles } from '../context/ProfileContext';
-import * as Icons from 'lucide-react';
+import { 
+  LayoutDashboard, 
+  TrendingDown, 
+  TrendingUp, 
+  Target, 
+  Plane, 
+  ScanBarcode, 
+  BrainCircuit, 
+  Settings, 
+  User, 
+  X, 
+  Menu, 
+  ChevronDown, 
+  LogOut,
+  GraduationCap,
+  Flame,
+  Sparkles,
+  DollarSign,
+  Briefcase
+} from 'lucide-react';
+
+const iconMap = {
+  LayoutDashboard,
+  TrendingDown,
+  TrendingUp,
+  Target,
+  Plane,
+  ScanBarcode,
+  BrainCircuit,
+  Settings,
+  User,
+  GraduationCap,
+  Flame,
+  Sparkles,
+  DollarSign,
+  Briefcase
+};
 
 const Sidebar = () => {
   const { user, logout } = useAuth();
@@ -18,7 +54,7 @@ const Sidebar = () => {
 
   // Safe Lucide icon rendering utility
   const renderIcon = (name, className = "w-5 h-5") => {
-    const IconComponent = Icons[name] || Icons.User;
+    const IconComponent = iconMap[name] || User;
     return <IconComponent className={className} />;
   };
 
@@ -59,7 +95,7 @@ const Sidebar = () => {
             onClick={() => setIsOpen(!isOpen)}
             className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-slate-100 transition-colors"
           >
-            {isOpen ? <Icons.X className="w-6 h-6" /> : <Icons.Menu className="w-6 h-6" />}
+            {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
         </div>
       </header>
@@ -105,7 +141,7 @@ const Sidebar = () => {
                     <p className="text-[11px] text-slate-400 font-medium">Active Profile</p>
                   </div>
                 </div>
-                <Icons.ChevronDown className={`w-4 h-4 text-slate-400 transition-transform ${showProfileDropdown ? 'rotate-180' : ''}`} />
+                <ChevronDown className={`w-4 h-4 text-slate-400 transition-transform ${showProfileDropdown ? 'rotate-180' : ''}`} />
               </button>
 
               {/* Profiles Dropdown list */}
@@ -195,7 +231,7 @@ const Sidebar = () => {
             onClick={handleLogout}
             className="w-full flex items-center justify-center gap-2.5 py-3 rounded-xl border border-white/5 bg-rose-500/5 hover:bg-rose-500/10 text-rose-400 hover:text-rose-300 text-sm font-semibold transition-all duration-200"
           >
-            <Icons.LogOut className="w-4 h-4" />
+            <LogOut className="w-4 h-4" />
             <span>Sign Out</span>
           </button>
         </div>

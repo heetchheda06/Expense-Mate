@@ -34,7 +34,7 @@ app.use(cors({
       return false;
     });
 
-    if (isAllowed || origin.startsWith('http://localhost') || origin.endsWith('.vercel.app')) {
+    if (isAllowed || origin.startsWith('http://localhost') || origin.endsWith('.vercel.app') || origin.endsWith('.web.app') || origin.endsWith('.firebaseapp.com')) {
       callback(null, true);
     } else {
       callback(new Error('Blocked by CORS policy'));
