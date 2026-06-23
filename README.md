@@ -135,6 +135,33 @@ This automatically boots a local MongoDB image, builds the Express container, co
 5. Vercel automatically processes the included `vercel.json` rewrite file to ensure SPA router links work perfectly.
 
 ---
+## 🔑 User Authentication & Password Saving Guide
+
+Follow these steps to register, log in, and ensure your credentials are securely saved:
+
+### 1. Registration (New Users)
+1. Navigate to the ExpenseMate application URL: [https://expense-mate-tracker.web.app](https://expense-mate-tracker.web.app)
+2. By default, you will see the **Welcome Back** (Sign In) screen.
+3. Click the **Register Here** link at the bottom of the card to switch to the **Create Account** screen.
+4. Fill in the following fields:
+   * **Full Name:** Enter your name (e.g., Alex Smith).
+   * **Email Address:** Enter your valid email address (e.g., alex@example.com).
+   * **Password:** Create a secure password.
+5. Click **Sign Up**.
+
+### 2. Password Saving Prompt (Crucial Step)
+* Upon clicking **Sign Up** or **Sign In**, your browser (e.g., **Google Chrome**) will detect the credential submission and display a pop-up in the top-right corner or address bar: **"Save password?"** or **"Save password to Google Account?"**.
+* > [!IMPORTANT]
+  > When this Google/browser prompt appears, click **Save**. This ensures Google Password Manager stores your credentials, enabling automated auto-fill for all subsequent logins.
+
+### 3. Log In (Returning Users)
+1. Go to the login screen.
+2. If you saved your password in the step above, Google/your browser will automatically auto-fill your email and password.
+3. If not automatically filled, enter your **Email Address** and **Password** manually.
+4. (Optional) Click the **Eye icon** next to the password input field to toggle password visibility and verify correctness.
+5. Click **Sign In** to log in. You will be redirected to the main dashboard.
+
+---
 
 ## ⚖️ License
 Licensed under the MIT License. Built securely for personal financial empowerment.
