@@ -42,14 +42,15 @@ const ExpenseManager = () => {
     'Food',
     'Transport',
     'Education',
+    'Vegetable',
+    'Grocery',
     'Shopping',
     'Health',
     'Bills',
     'EMI',
     'Investments',
     'Entertainment',
-    'Miscellaneous',
-    'Grocery'
+    'Miscellaneous'
   ];
 
   // Fetch expenses with active filter state

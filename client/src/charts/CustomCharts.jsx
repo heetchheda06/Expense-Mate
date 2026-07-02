@@ -32,14 +32,15 @@ export const CategoryDoughnutChart = ({ expenses }) => {
     'Food',
     'Transport',
     'Education',
+    'Vegetable',
+    'Grocery',
     'Shopping',
     'Health',
     'Bills',
     'EMI',
     'Investments',
     'Entertainment',
-    'Miscellaneous',
-    'Grocery'
+    'Miscellaneous'
   ];
 
   // Neon color map matching aesthetics
@@ -47,14 +48,15 @@ export const CategoryDoughnutChart = ({ expenses }) => {
     'Food': '#4F46E5', // Indigo
     'Transport': '#06B6D4', // Cyan
     'Education': '#10B981', // Emerald
+    'Vegetable': '#22C55E', // Green
+    'Grocery': '#84CC16', // Lime
     'Shopping': '#8B5CF6', // Purple
     'Health': '#F43F5E', // Rose
     'Bills': '#EC4899', // Pink
     'EMI': '#F59E0B', // Amber
     'Investments': '#14B8A6', // Teal
     'Entertainment': '#D946EF', // Fuchsia
-    'Miscellaneous': '#64748B', // Slate
-    'Grocery': '#84CC16' // Lime
+    'Miscellaneous': '#64748B' // Slate
   };
 
   // Compile totals

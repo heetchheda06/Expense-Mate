@@ -28,14 +28,15 @@ const ExpenseSchema = new mongoose.Schema({
       'Food',
       'Transport',
       'Education',
+      'Vegetable',
+      'Grocery',
       'Shopping',
       'Health',
       'Bills',
       'EMI',
       'Investments',
       'Entertainment',
-      'Miscellaneous',
-      'Grocery'
+      'Miscellaneous'
     ]
   },
   date: {
