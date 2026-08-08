@@ -1,16 +1,30 @@
 {
+  "id": "/",
   "short_name": "ExpenseMate",
-  "name": "ExpenseMate - AI-Powered Budget & Expense Tracker",
+  "name": "ExpenseMate - AI-Powered Budget Tracker",
+  "description": "Smart AI-powered expense tracking, OCR bill scanner, budget manager, and personal financial assistant.",
+  "lang": "en",
+  "dir": "ltr",
+  "scope": "/",
+  "start_url": "/dashboard",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui", "browser"],
+  "orientation": "portrait",
+  "theme_color": "#080B11",
+  "background_color": "#080B11",
+  "categories": ["finance", "utilities", "productivity"],
   "icons": [
     {
-      "src": "/favicon.ico",
-      "sizes": "64x64 32x32 24x24 16x16",
-      "type": "image/x-icon"
+      "src": "/pwa-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/pwa-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
     }
-  ],
-  "start_url": "/dashboard",
-  "background_color": "#080B11",
-  "theme_color": "#080B11",
-  "display": "standalone",
-  "orientation": "portrait"
+  ]
 }
