@@ -4,10 +4,10 @@
   "description": "Root configuration and task runner for ExpenseMate",
   "scripts": {
     "install-all": "npm install && npm install --prefix client && npm install --prefix server",
-    "build": "npm install --prefix server",
-    "postinstall": "npm install --prefix server",
+    "build": "cd server && npm install",
+    "postinstall": "cd server && npm install",
     "dev": "concurrently \"npm run dev --prefix client\" \"npm run dev --prefix server\"",
-    "start": "npm run start --prefix server"
+    "start": "node server/index.js"
   },
   "dependencies": {
     "concurrently": "^8.2.2"
