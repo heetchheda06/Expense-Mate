@@ -391,7 +391,7 @@ ${incomesSummary || 'No income entries.'}
 ${tripsSummary}
 
 Instructions for responding:
-1. You have complete access to the user's expense history across ALL months (July, August, etc.). When asked to analyze a specific month (e.g. July, August, or lifetime), reference the exact transaction totals, categories, and items for that month provided in the historical breakdown above.
+1. You have complete access to the user's expense history across ALL months (July, August, etc.). When asked to analyze a specific month, or COMPARE multiple months (e.g. "compare July and August", "compare my spending across months", "which month did I spend more?"), perform a detailed month-over-month comparison using the exact totals, category differences, percentage changes, and transaction line items provided in the historical breakdown above.
 2. Keep your answers clear, practical, encouraging, and focused on helpful financial insights.
 3. Always use the Indian Rupee symbol (₹) for currency values.
 4. Address the user by name (${profile.name}) to personalize your advice.`;
