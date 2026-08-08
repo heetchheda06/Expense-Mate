@@ -6,6 +6,7 @@ import { ProfileProvider } from './context/ProfileContext';
 
 // Import Layout & Page components
 import Sidebar from './components/Sidebar';
+import MobileNav from './components/MobileNav';
 import Landing from './pages/Landing';
 import AuthPage from './pages/AuthPage';
 import Dashboard from './pages/Dashboard';
@@ -79,7 +80,7 @@ const AppLayout = () => {
     return (
       <div className="min-h-screen bg-[#080B11] text-slate-100 flex flex-col md:flex-row relative">
         <Sidebar />
-        <main className="flex-grow min-h-[90vh] md:h-screen md:overflow-y-auto w-full">
+        <main className="flex-grow min-h-[90vh] md:h-screen md:overflow-y-auto w-full pb-20 md:pb-0">
           <Routes>
             <Route path="/dashboard" element={<ProtectedRoute><AnimatedPageWrapper><Dashboard /></AnimatedPageWrapper></ProtectedRoute>} />
             <Route path="/expenses" element={<ProtectedRoute><AnimatedPageWrapper><ExpenseManager /></AnimatedPageWrapper></ProtectedRoute>} />
@@ -95,6 +96,7 @@ const AppLayout = () => {
           </Routes>
         </main>
         <AiChatBot />
+        <MobileNav />
       </div>
     );
   }
