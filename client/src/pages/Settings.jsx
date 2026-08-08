@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useProfiles } from '../context/ProfileContext';
 import { useToast } from '../context/ToastContext';
 import api from '../services/api';
-import { Plus, Trash2, Edit2, Check, User, Briefcase, Flame, Sparkles, DollarSign, Target, Lock, KeyRound, ShieldCheck, Loader } from 'lucide-react';
+import { Plus, Trash2, Edit2, Check, User, Briefcase, Flame, Sparkles, DollarSign, Target, Lock, KeyRound, ShieldCheck, Loader, Eye, EyeOff } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const Settings = () => {
@@ -22,6 +22,9 @@ const Settings = () => {
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmNewPassword, setConfirmNewPassword] = useState('');
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [passwordLoading, setPasswordLoading] = useState(false);
 
   const handleChangePassword = async (e) => {
@@ -352,13 +355,21 @@ const Settings = () => {
             <div className="relative">
               <Lock className="absolute left-3 top-2.5 w-4 h-4 text-slate-500" />
               <input
-                type="password"
+                type={showCurrentPassword ? 'text' : 'password'}
                 value={currentPassword}
                 onChange={(e) => setCurrentPassword(e.target.value)}
                 placeholder="••••••••"
                 required
-                className="glass-input pl-9 text-xs py-2 w-full"
+                className="glass-input pl-9 pr-9 text-xs py-2 w-full"
               />
+              <button
+                type="button"
+                onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                className="absolute right-3 top-2.5 text-slate-400 hover:text-slate-200 transition-colors"
+                title={showCurrentPassword ? "Hide Password" : "Show Password"}
+              >
+                {showCurrentPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </button>
             </div>
           </div>
 
@@ -367,13 +378,21 @@ const Settings = () => {
             <div className="relative">
               <KeyRound className="absolute left-3 top-2.5 w-4 h-4 text-slate-500" />
               <input
-                type="password"
+                type={showNewPassword ? 'text' : 'password'}
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 placeholder="••••••••"
                 required
-                className="glass-input pl-9 text-xs py-2 w-full"
+                className="glass-input pl-9 pr-9 text-xs py-2 w-full"
               />
+              <button
+                type="button"
+                onClick={() => setShowNewPassword(!showNewPassword)}
+                className="absolute right-3 top-2.5 text-slate-400 hover:text-slate-200 transition-colors"
+                title={showNewPassword ? "Hide Password" : "Show Password"}
+              >
+                {showNewPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </button>
             </div>
           </div>
 
@@ -382,13 +401,21 @@ const Settings = () => {
             <div className="relative">
               <KeyRound className="absolute left-3 top-2.5 w-4 h-4 text-slate-500" />
               <input
-                type="password"
+                type={showConfirmPassword ? 'text' : 'password'}
                 value={confirmNewPassword}
                 onChange={(e) => setConfirmNewPassword(e.target.value)}
                 placeholder="••••••••"
                 required
-                className="glass-input pl-9 text-xs py-2 w-full"
+                className="glass-input pl-9 pr-9 text-xs py-2 w-full"
               />
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                className="absolute right-3 top-2.5 text-slate-400 hover:text-slate-200 transition-colors"
+                title={showConfirmPassword ? "Hide Password" : "Show Password"}
+              >
+                {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </button>
             </div>
           </div>
 
