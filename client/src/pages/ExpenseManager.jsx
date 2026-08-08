@@ -22,6 +22,7 @@ const ExpenseManager = () => {
   const [selectedMonth, setSelectedMonth] = useState('');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
+  const [showMobileFilters, setShowMobileFilters] = useState(false);
 
   // Form Modal States
   const [showModal, setShowModal] = useState(false);
@@ -285,114 +286,123 @@ const ExpenseManager = () => {
       </div>
 
       {/* Filters Board panel */}
-      <div className="glass-card p-5 rounded-2xl border border-white/5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5 items-end">
-        {/* Search */}
-        <div className="flex flex-col gap-1.5 col-span-1 sm:col-span-2 lg:col-span-1">
-          <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Search Text</label>
-          <div className="relative">
-            <Search className="absolute left-3 top-3 w-4 h-4 text-slate-500" />
+      <div className="glass-card p-3.5 sm:p-5 rounded-2xl border border-white/5 flex flex-col gap-3">
+        {/* Top search & toggle bar */}
+        <div className="flex items-center gap-2">
+          <div className="relative flex-grow">
+            <Search className="absolute left-3 top-2.5 sm:top-3 w-4 h-4 text-slate-500" />
             <input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="e.g. Shopping"
-              className="w-full glass-input pl-9 text-xs py-2"
+              placeholder="Search expenses..."
+              className="w-full glass-input pl-9 text-xs py-1.5 sm:py-2"
             />
           </div>
+          <button
+            onClick={() => setShowMobileFilters(!showMobileFilters)}
+            className="sm:hidden btn-glass text-xs font-semibold py-1.5 px-3 flex items-center gap-1.5 border border-white/10"
+          >
+            <Filter className="w-3.5 h-3.5 text-indigo-400" />
+            <span>{showMobileFilters ? 'Hide Filters' : 'Filters'}</span>
+          </button>
         </div>
 
-        {/* Category Filter */}
-        <div className="flex flex-col gap-1.5">
-          <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Category</label>
-          <div className="relative">
-            <Filter className="absolute left-3 top-3 w-4 h-4 text-slate-500" />
-            <select
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-              className="w-full glass-input pl-9 text-xs py-2 appearance-none"
-            >
-              <option value="">All Categories</option>
-              {categories.map(c => <option key={c} value={c}>{c}</option>)}
-            </select>
+        {/* Collapsible filters grid */}
+        <div className={`${showMobileFilters ? 'grid' : 'hidden sm:grid'} grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5 items-end pt-2 border-t border-white/5 sm:border-t-0 sm:pt-0`}>
+          {/* Category Filter */}
+          <div className="flex flex-col gap-1">
+            <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Category</label>
+            <div className="relative">
+              <Filter className="absolute left-3 top-2.5 w-4 h-4 text-slate-500" />
+              <select
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                className="w-full glass-input pl-9 text-xs py-1.5 appearance-none"
+              >
+                <option value="">All Categories</option>
+                {categories.map(c => <option key={c} value={c}>{c}</option>)}
+              </select>
+            </div>
           </div>
-        </div>
 
-        {/* Date presets */}
-        <div className="flex flex-col gap-1.5">
-          <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Range Presets</label>
-          <div className="relative">
-            <Calendar className="absolute left-3 top-3 w-4 h-4 text-slate-500" />
-            <select
-              value={range}
+          {/* Date presets */}
+          <div className="flex flex-col gap-1">
+            <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Range Presets</label>
+            <div className="relative">
+              <Calendar className="absolute left-3 top-2.5 w-4 h-4 text-slate-500" />
+              <select
+                value={range}
+                onChange={(e) => { 
+                  setRange(e.target.value); 
+                  setSelectedMonth('');
+                  setStartDate(''); 
+                  setEndDate(''); 
+                }}
+                className="w-full glass-input pl-9 text-xs py-1.5 appearance-none"
+              >
+                <option value="">Default Filter</option>
+                <option value="lifetime">Lifetime (All Time)</option>
+                <option value="week">Past 7 Days</option>
+                <option value="month">Past 30 Days</option>
+              </select>
+            </div>
+          </div>
+
+          {/* Specific Month Filter */}
+          <div className="flex flex-col gap-1">
+            <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Specific Month</label>
+            <input
+              type="month"
+              value={selectedMonth}
               onChange={(e) => { 
-                setRange(e.target.value); 
-                setSelectedMonth('');
+                setSelectedMonth(e.target.value); 
+                setRange(''); 
                 setStartDate(''); 
                 setEndDate(''); 
               }}
-              className="w-full glass-input pl-9 text-xs py-2 appearance-none"
-            >
-              <option value="">Default Filter</option>
-              <option value="lifetime">Lifetime (All Time)</option>
-              <option value="week">Past 7 Days</option>
-              <option value="month">Past 30 Days</option>
-            </select>
+              className="w-full glass-input text-xs py-1.5"
+            />
           </div>
-        </div>
 
-        {/* Specific Month Filter */}
-        <div className="flex flex-col gap-1.5">
-          <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Specific Month</label>
-          <input
-            type="month"
-            value={selectedMonth}
-            onChange={(e) => { 
-              setSelectedMonth(e.target.value); 
-              setRange(''); 
-              setStartDate(''); 
-              setEndDate(''); 
-            }}
-            className="w-full glass-input text-xs py-2"
-          />
-        </div>
+          {/* Custom Start Date */}
+          <div className="flex flex-col gap-1">
+            <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400">From Date</label>
+            <input
+              type="date"
+              value={startDate}
+              onChange={(e) => { 
+                setStartDate(e.target.value); 
+                setSelectedMonth('');
+                setRange(''); 
+              }}
+              className="w-full glass-input text-xs py-1.5"
+            />
+          </div>
 
-        {/* Custom Start Date */}
-        <div className="flex flex-col gap-1.5">
-          <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400">From Date</label>
-          <input
-            type="date"
-            value={startDate}
-            onChange={(e) => { 
-              setStartDate(e.target.value); 
-              setSelectedMonth('');
-              setRange(''); 
-            }}
-            className="w-full glass-input text-xs py-2"
-          />
-        </div>
-
-        {/* Custom End Date */}
-        <div className="flex flex-col gap-1.5">
-          <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400">To Date</label>
-          <input
-            type="date"
-            value={endDate}
-            onChange={(e) => { 
-              setEndDate(e.target.value); 
-              setSelectedMonth('');
-              setRange(''); 
-            }}
-            className="w-full glass-input text-xs py-2"
-          />
+          {/* Custom End Date */}
+          <div className="flex flex-col gap-1">
+            <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400">To Date</label>
+            <input
+              type="date"
+              value={endDate}
+              onChange={(e) => { 
+                setEndDate(e.target.value); 
+                setSelectedMonth('');
+                setRange(''); 
+              }}
+              className="w-full glass-input text-xs py-1.5"
+            />
+          </div>
         </div>
       </div>
 
-      {/* Main Expense Table list */}
+      {/* Main Expense List */}
       <div className="glass-card rounded-2xl border border-white/5 overflow-hidden">
         {loading ? (
           <div className="p-6"><ListSkeleton /></div>
         ) : expenses.length === 0 ? (
-          <div className="text-center py-16 text-xs font-semibold text-slate-500 flex flex-col items-center gap-3">
+          <div className="text-center py-12 text-xs font-semibold text-slate-500 flex flex-col items-center gap-3">
             <span>No expense transactions logged for this active configuration.</span>
             <button
               onClick={() => { setSearch(''); setCategory(''); setRange(''); setStartDate(''); setEndDate(''); }}
@@ -402,75 +412,124 @@ const ExpenseManager = () => {
             </button>
           </div>
         ) : (
-          <div className="overflow-x-auto w-full">
-            <table className="w-full border-collapse text-left text-xs md:text-sm">
-              <thead>
-                <tr className="bg-slate-900/60 border-b border-white/5 text-slate-400 font-bold">
-                  <th className="p-4">Transaction Details</th>
-                  <th className="p-4">Category</th>
-                  <th className="p-4">Date</th>
-                  <th className="p-4 hidden md:table-cell">Tags / Notes</th>
-                  <th className="p-4 text-right">Amount</th>
-                  <th className="p-4 text-center">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {expenses.map((exp) => (
-                  <tr key={exp._id} className="border-b border-white/5 hover:bg-white/2 transition-colors">
-                    <td className="p-4 font-semibold">
-                      <div className="flex items-center gap-2">
-                        <span className="text-slate-100">{exp.title}</span>
-                        {exp.isRecurring && (
-                          <div className="text-[9px] bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 font-bold px-1.5 py-0.5 rounded-full flex items-center gap-1">
-                            <CalendarClock className="w-2.5 h-2.5" />
-                            <span>{exp.recurringInterval}</span>
-                          </div>
-                        )}
-                      </div>
-                    </td>
-                    <td className="p-4">
-                      <span className="px-2.5 py-1 rounded-full bg-slate-900 text-slate-300 font-semibold border border-white/5">
+          <>
+            {/* Mobile Card List View (sm:hidden) */}
+            <div className="flex flex-col divide-y divide-white/5 sm:hidden">
+              {expenses.map((exp) => (
+                <div key={exp._id} className="p-3.5 flex items-center justify-between gap-3 hover:bg-white/5 transition-colors">
+                  <div className="flex flex-col gap-1 min-w-0 flex-1">
+                    <div className="flex items-center gap-1.5">
+                      <span className="font-extrabold text-slate-100 text-xs truncate">{exp.title}</span>
+                      {exp.isRecurring && (
+                        <span className="text-[9px] bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 px-1 py-0.2 rounded-full font-bold">
+                          ↻
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="px-2 py-0.5 rounded-md bg-slate-900 text-slate-300 font-semibold border border-white/5 text-[9px]">
                         {exp.category}
                       </span>
-                    </td>
-                    <td className="p-4 text-slate-400 font-medium">{new Date(exp.date).toLocaleDateString()}</td>
-                    <td className="p-4 hidden md:table-cell">
-                      <div className="flex flex-col gap-1 max-w-xs">
-                        <p className="text-[11px] text-slate-400 font-medium line-clamp-1 italic">{exp.notes || 'No notes'}</p>
-                        {exp.tags && exp.tags.length > 0 && (
-                          <div className="flex flex-wrap gap-1">
-                            {exp.tags.map((t, idx) => (
-                              <span key={idx} className="text-[9px] bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded border border-white/5 flex items-center gap-0.5">
-                                <Tag className="w-2.5 h-2.5" />
-                                {t}
-                              </span>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    </td>
-                    <td className="p-4 text-right font-black text-rose-400">-₹{exp.amount.toFixed(2)}</td>
-                    <td className="p-4 text-center">
-                      <div className="flex items-center justify-center gap-2.5">
-                        <button
-                          onClick={() => openEditModal(exp)}
-                          className="p-1.5 rounded-lg bg-white/5 hover:bg-indigo-500/20 text-slate-300 hover:text-indigo-300 transition-colors"
-                        >
-                          <Edit2 className="w-4 h-4" />
-                        </button>
-                        <button
-                          onClick={() => handleDelete(exp._id)}
-                          className="p-1.5 rounded-lg bg-white/5 hover:bg-rose-500/20 text-slate-300 hover:text-rose-300 transition-colors"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </td>
+                      <span className="text-[10px] text-slate-400 font-medium">
+                        {new Date(exp.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2 flex-shrink-0">
+                    <div className="text-right">
+                      <span className="font-black text-rose-400 text-xs sm:text-sm">-₹{exp.amount.toFixed(2)}</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <button
+                        onClick={() => openEditModal(exp)}
+                        className="p-1 rounded-lg bg-white/5 text-slate-300 hover:text-indigo-400"
+                      >
+                        <Edit2 className="w-3.5 h-3.5" />
+                      </button>
+                      <button
+                        onClick={() => handleDelete(exp._id)}
+                        className="p-1 rounded-lg bg-white/5 text-slate-300 hover:text-rose-400"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Desktop Table (hidden on sm screens) */}
+            <div className="hidden sm:block overflow-x-auto w-full">
+              <table className="w-full border-collapse text-left text-xs md:text-sm">
+                <thead>
+                  <tr className="bg-slate-900/60 border-b border-white/5 text-slate-400 font-bold">
+                    <th className="p-4">Transaction Details</th>
+                    <th className="p-4">Category</th>
+                    <th className="p-4">Date</th>
+                    <th className="p-4 hidden md:table-cell">Tags / Notes</th>
+                    <th className="p-4 text-right">Amount</th>
+                    <th className="p-4 text-center">Actions</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody>
+                  {expenses.map((exp) => (
+                    <tr key={exp._id} className="border-b border-white/5 hover:bg-white/2 transition-colors">
+                      <td className="p-4 font-semibold">
+                        <div className="flex items-center gap-2">
+                          <span className="text-slate-100">{exp.title}</span>
+                          {exp.isRecurring && (
+                            <div className="text-[9px] bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 font-bold px-1.5 py-0.5 rounded-full flex items-center gap-1">
+                              <CalendarClock className="w-2.5 h-2.5" />
+                              <span>{exp.recurringInterval}</span>
+                            </div>
+                          )}
+                        </div>
+                      </td>
+                      <td className="p-4">
+                        <span className="px-2.5 py-1 rounded-full bg-slate-900 text-slate-300 font-semibold border border-white/5">
+                          {exp.category}
+                        </span>
+                      </td>
+                      <td className="p-4 text-slate-400 font-medium">{new Date(exp.date).toLocaleDateString()}</td>
+                      <td className="p-4 hidden md:table-cell">
+                        <div className="flex flex-col gap-1 max-w-xs">
+                          <p className="text-[11px] text-slate-400 font-medium line-clamp-1 italic">{exp.notes || 'No notes'}</p>
+                          {exp.tags && exp.tags.length > 0 && (
+                            <div className="flex flex-wrap gap-1">
+                              {exp.tags.map((t, idx) => (
+                                <span key={idx} className="text-[9px] bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded border border-white/5 flex items-center gap-0.5">
+                                  <Tag className="w-2.5 h-2.5" />
+                                  {t}
+                                </span>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      </td>
+                      <td className="p-4 text-right font-black text-rose-400">-₹{exp.amount.toFixed(2)}</td>
+                      <td className="p-4 text-center">
+                        <div className="flex items-center justify-center gap-2.5">
+                          <button
+                            onClick={() => openEditModal(exp)}
+                            className="p-1.5 rounded-lg bg-white/5 hover:bg-indigo-500/20 text-slate-300 hover:text-indigo-300 transition-colors"
+                          >
+                            <Edit2 className="w-4 h-4" />
+                          </button>
+                          <button
+                            onClick={() => handleDelete(exp._id)}
+                            className="p-1.5 rounded-lg bg-white/5 hover:bg-rose-500/20 text-slate-300 hover:text-rose-300 transition-colors"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </>
         )}
       </div>
 
