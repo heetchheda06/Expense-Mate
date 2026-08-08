@@ -109,7 +109,7 @@ const Sidebar = () => {
 
       {/* Sidebar Layout container */}
       <aside 
-        className={`fixed top-0 left-0 bottom-0 z-50 w-72 glass-card border-r border-white/5 flex flex-col justify-between py-6 px-4 transition-transform duration-300 md:translate-x-0 ${
+        className={`fixed top-0 left-0 bottom-0 z-[70] w-72 glass-card border-r border-white/5 flex flex-col justify-between pt-6 pb-24 md:pb-6 px-4 overflow-y-auto transition-transform duration-300 md:translate-x-0 ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         } md:sticky md:h-screen`}
       >
@@ -248,7 +248,7 @@ const Sidebar = () => {
       {isOpen && (
         <div 
           onClick={() => setIsOpen(false)}
-          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 md:hidden"
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[65] md:hidden"
         />
       )}
     </>
