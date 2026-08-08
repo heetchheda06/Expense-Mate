@@ -144,7 +144,8 @@ export const SpendingTrendChart = ({ expenses }) => {
     dailyTotals[dStr] = (dailyTotals[dStr] || 0) + exp.amount;
   });
 
-  const labels = Object.keys(dailyTotals).slice(-7);
+  // Include all transaction dates across the full month/period (no 7-day truncation)
+  const labels = Object.keys(dailyTotals);
   const dataValues = labels.map(l => dailyTotals[l]);
 
   const hasData = labels.length > 0;
