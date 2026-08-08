@@ -182,107 +182,109 @@ const Dashboard = () => {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.4 }}
-      className="p-6 md:p-8 flex flex-col gap-6 w-full max-w-7xl mx-auto z-10 relative"
+      className="p-3 sm:p-6 md:p-8 flex flex-col gap-3.5 sm:gap-6 w-full max-w-7xl mx-auto z-10 relative"
     >
       {/* Decorative background glows */}
       <div className="glow-blob top-10 right-10 scale-75" />
       <div className="glow-blob bottom-10 left-10 scale-75" />
 
       {/* 1. Header Welcome Banner */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
         <div>
           <div className="flex items-center gap-2 text-indigo-400 font-bold text-xs uppercase tracking-wider mb-1">
-            <Sparkles className="w-4 h-4" />
+            <Sparkles className="w-3.5 h-3.5" />
             <span>Profile: {activeProfile.name}</span>
           </div>
-          <h1 className="text-3xl font-extrabold tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
             Financial Dashboard
           </h1>
         </div>
         
         {/* Action controls */}
-        <div className="flex items-center gap-2.5 flex-wrap">
+        <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
           <button 
             onClick={() => navigate('/scanner')}
-            className="btn-glass text-xs font-semibold py-2 px-3.5 flex items-center gap-2 border border-white/5 hover:border-indigo-500/25 transition-all"
+            className="btn-glass text-[11px] sm:text-xs font-semibold py-1.5 sm:py-2 px-2.5 sm:px-3.5 flex items-center gap-1.5 border border-white/5 hover:border-indigo-500/25 transition-all"
           >
-            <Scan className="w-4 h-4 text-indigo-400" />
-            <span>OCR Bill Scan</span>
+            <Scan className="w-3.5 h-3.5 text-indigo-400" />
+            <span>OCR Scan</span>
           </button>
           <button 
             onClick={() => navigate('/recommendations')}
-            className="btn-glass text-xs font-semibold py-2 px-3.5 flex items-center gap-2 border border-white/5 hover:border-cyan-500/25 transition-all"
+            className="btn-glass text-[11px] sm:text-xs font-semibold py-1.5 sm:py-2 px-2.5 sm:px-3.5 flex items-center gap-1.5 border border-white/5 hover:border-cyan-500/25 transition-all"
           >
-            <BrainCircuit className="w-4 h-4 text-cyan-400" />
+            <BrainCircuit className="w-3.5 h-3.5 text-cyan-400" />
             <span>AI Advice</span>
           </button>
           <button 
             onClick={() => navigate('/expenses')}
-            className="btn-primary text-xs font-semibold py-2.5 px-4 flex items-center gap-2 shadow-glow"
+            className="btn-primary text-[11px] sm:text-xs font-semibold py-1.5 sm:py-2.5 px-3 sm:px-4 flex items-center gap-1.5 shadow-glow"
           >
-            <PlusCircle className="w-4 h-4" />
+            <PlusCircle className="w-3.5 h-3.5" />
             <span>New Transaction</span>
           </button>
         </div>
       </div>
 
       {/* 2. PROMINENT DYNAMIC MONTH & PERIOD SELECTOR BAR */}
-      <div className="glass-card p-4 rounded-3xl border border-white/10 flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4 shadow-2xl bg-slate-900/60 backdrop-blur-xl relative overflow-hidden">
+      <div className="glass-card p-3 sm:p-4 rounded-2xl sm:rounded-3xl border border-white/10 flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3 shadow-2xl bg-slate-900/60 backdrop-blur-xl relative overflow-hidden">
         <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-indigo-500 via-purple-500 to-cyan-500" />
 
         {/* Left: Active Scope Indicator & Month Step Buttons */}
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 flex-shrink-0 shadow-glow">
-            <Calendar className="w-5 h-5" />
-          </div>
-          <div>
-            <div className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400">
-              Active Dashboard Scope
+        <div className="flex items-center justify-between sm:justify-start gap-2">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 flex-shrink-0 shadow-glow">
+              <Calendar className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
-            <div className="text-base font-extrabold text-white flex items-center gap-2 mt-0.5">
-              <span>{activeScopeName}</span>
-              {periodMode === 'current' && (
-                <span className="text-[10px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded-full font-bold">
-                  Current Month
-                </span>
-              )}
+            <div>
+              <div className="text-[9px] sm:text-[10px] font-extrabold uppercase tracking-wider text-slate-400">
+                Active Dashboard Scope
+              </div>
+              <div className="text-xs sm:text-base font-extrabold text-white flex items-center gap-1.5 mt-0.5">
+                <span>{activeScopeName}</span>
+                {periodMode === 'current' && (
+                  <span className="text-[9px] sm:text-[10px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-1.5 py-0.5 rounded-full font-bold">
+                    Current
+                  </span>
+                )}
+              </div>
             </div>
           </div>
 
           {/* Stepper controls */}
-          <div className="flex items-center gap-1 ml-2 border-l border-white/10 pl-3">
+          <div className="flex items-center gap-1 border-l border-white/10 pl-2 sm:pl-3">
             <button
               onClick={() => handleStepMonth('prev')}
               title="Previous Month"
-              className="w-8 h-8 rounded-xl bg-slate-800/80 border border-white/10 flex items-center justify-center text-slate-300 hover:text-white hover:bg-indigo-600 transition-all"
+              className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-slate-800/80 border border-white/10 flex items-center justify-center text-slate-300 hover:text-white hover:bg-indigo-600 transition-all"
             >
-              <ChevronLeft className="w-4 h-4" />
+              <ChevronLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             </button>
             <button
               onClick={() => handleStepMonth('next')}
               title="Next Month"
-              className="w-8 h-8 rounded-xl bg-slate-800/80 border border-white/10 flex items-center justify-center text-slate-300 hover:text-white hover:bg-indigo-600 transition-all"
+              className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-slate-800/80 border border-white/10 flex items-center justify-center text-slate-300 hover:text-white hover:bg-indigo-600 transition-all"
             >
-              <ChevronRight className="w-4 h-4" />
+              <ChevronRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             </button>
           </div>
         </div>
 
-        {/* Right: Pill Tab Switches */}
-        <div className="flex items-center gap-2 flex-wrap">
+        {/* Right: Pill Tab Switches (Horizontal Scroll on Mobile) */}
+        <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1 w-full flex-nowrap lg:flex-wrap">
           {/* This Month */}
           <button
             onClick={() => {
               setPeriodMode('current');
             }}
-            className={`px-3.5 py-2 rounded-2xl text-xs font-extrabold transition-all flex items-center gap-2 border ${
+            className={`px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl sm:rounded-2xl text-[11px] sm:text-xs font-extrabold transition-all flex items-center gap-1.5 border flex-shrink-0 ${
               periodMode === 'current'
                 ? 'bg-indigo-600 text-white border-indigo-400 shadow-glow shadow-indigo-500/30 scale-105'
                 : 'bg-slate-900/80 text-slate-400 border-white/5 hover:text-white hover:border-white/20'
             }`}
           >
-            <Calendar className="w-4 h-4" />
-            <span>This Month ({formatMonthLabel(currentMonthKey).split(' ')[0]})</span>
+            <Calendar className="w-3.5 h-3.5" />
+            <span>This Month</span>
           </button>
 
           {/* Last Month */}
@@ -290,27 +292,27 @@ const Dashboard = () => {
             onClick={() => {
               setPeriodMode('previous');
             }}
-            className={`px-3.5 py-2 rounded-2xl text-xs font-extrabold transition-all flex items-center gap-2 border ${
+            className={`px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl sm:rounded-2xl text-[11px] sm:text-xs font-extrabold transition-all flex items-center gap-1.5 border flex-shrink-0 ${
               periodMode === 'previous'
                 ? 'bg-indigo-600 text-white border-indigo-400 shadow-glow shadow-indigo-500/30 scale-105'
                 : 'bg-slate-900/80 text-slate-400 border-white/5 hover:text-white hover:border-white/20'
             }`}
           >
-            <Calendar className="w-4 h-4" />
-            <span>Last Month ({formatMonthLabel(previousMonthKey).split(' ')[0]})</span>
+            <Calendar className="w-3.5 h-3.5" />
+            <span>Last Month</span>
           </button>
 
           {/* Custom Month Picker */}
-          <div className="relative flex items-center">
+          <div className="relative flex items-center flex-shrink-0">
             <button
               onClick={() => setPeriodMode('custom')}
-              className={`px-3.5 py-2 rounded-2xl text-xs font-extrabold transition-all flex items-center gap-2 border ${
+              className={`px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl sm:rounded-2xl text-[11px] sm:text-xs font-extrabold transition-all flex items-center gap-1.5 border ${
                 periodMode === 'custom'
                   ? 'bg-indigo-600 text-white border-indigo-400 shadow-glow shadow-indigo-500/30 scale-105'
                   : 'bg-slate-900/80 text-slate-400 border-white/5 hover:text-white hover:border-white/20'
               }`}
             >
-              <Filter className="w-4 h-4" />
+              <Filter className="w-3.5 h-3.5" />
               <span>Select Month</span>
             </button>
             <input
@@ -320,20 +322,20 @@ const Dashboard = () => {
                 setCustomMonthInput(e.target.value);
                 setPeriodMode('custom');
               }}
-              className="ml-2 glass-input text-xs py-1.5 px-3 font-bold rounded-2xl border border-indigo-500/40 text-slate-100 bg-slate-900"
+              className="ml-1.5 glass-input text-[10px] sm:text-xs py-1 px-2 font-bold rounded-xl border border-indigo-500/40 text-slate-100 bg-slate-900"
             />
           </div>
 
           {/* Lifetime View */}
           <button
             onClick={() => setPeriodMode('lifetime')}
-            className={`px-3.5 py-2 rounded-2xl text-xs font-extrabold transition-all flex items-center gap-2 border ${
+            className={`px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl sm:rounded-2xl text-[11px] sm:text-xs font-extrabold transition-all flex items-center gap-1.5 border flex-shrink-0 ${
               periodMode === 'lifetime'
                 ? 'bg-indigo-600 text-white border-indigo-400 shadow-glow shadow-indigo-500/30 scale-105'
                 : 'bg-slate-900/80 text-slate-400 border-white/5 hover:text-white hover:border-white/20'
             }`}
           >
-            <Infinity className="w-4 h-4" />
+            <Infinity className="w-3.5 h-3.5" />
             <span>Lifetime</span>
           </button>
         </div>
@@ -344,36 +346,36 @@ const Dashboard = () => {
         <motion.div
           initial={{ opacity: 0, scale: 0.98 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="glass-card p-6 rounded-3xl border border-indigo-500/30 bg-gradient-to-r from-indigo-950/40 via-purple-950/20 to-slate-900/60 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-4"
+          className="glass-card p-4 sm:p-6 rounded-2xl sm:rounded-3xl border border-indigo-500/30 bg-gradient-to-r from-indigo-950/40 via-purple-950/20 to-slate-900/60 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-3"
         >
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center text-indigo-300 flex-shrink-0 shadow-glow">
-              <Sparkles className="w-6 h-6" />
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center text-indigo-300 flex-shrink-0 shadow-glow">
+              <Sparkles className="w-5 h-5 sm:w-6 sm:h-6" />
             </div>
             <div>
-              <h3 className="text-base font-extrabold text-slate-100">
+              <h3 className="text-xs sm:text-base font-extrabold text-slate-100">
                 Fresh Monthly Reset for {activeScopeName}
               </h3>
-              <p className="text-xs font-medium text-slate-400 mt-1">
+              <p className="text-[10px] sm:text-xs font-medium text-slate-400 mt-0.5">
                 No expense transactions logged for this selected cycle yet. Total spent is cleanly set to ₹0.00.
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-2 flex-shrink-0">
+          <div className="flex items-center gap-2 flex-shrink-0 w-full sm:w-auto">
             <button
               onClick={() => {
                 setPeriodMode('previous');
               }}
-              className="btn-glass text-xs font-bold py-2 px-4 border border-white/10"
+              className="btn-glass text-[10px] sm:text-xs font-bold py-1.5 sm:py-2 px-3 sm:px-4 border border-white/10 flex-1 sm:flex-initial"
             >
-              View Last Month History
+              View Last Month
             </button>
             <button
               onClick={() => navigate('/expenses')}
-              className="btn-primary text-xs font-bold py-2 px-4 shadow-glow flex items-center gap-1.5"
+              className="btn-primary text-[10px] sm:text-xs font-bold py-1.5 sm:py-2 px-3 sm:px-4 shadow-glow flex items-center justify-center gap-1 flex-1 sm:flex-initial"
             >
-              <PlusCircle className="w-4 h-4" />
-              <span>Add First Expense</span>
+              <PlusCircle className="w-3.5 h-3.5" />
+              <span>Add Expense</span>
             </button>
           </div>
         </motion.div>
@@ -384,146 +386,146 @@ const Dashboard = () => {
         <motion.div 
           initial={{ opacity: 0, scale: 0.98 }}
           animate={{ opacity: 1, scale: 1 }}
-          className={`flex items-start gap-3.5 p-4 rounded-2xl border ${
+          className={`flex items-start gap-3 p-3.5 rounded-2xl border ${
             budgetRatio >= 1.0 
               ? 'bg-rose-500/10 border-rose-500/20 text-rose-300' 
               : 'bg-amber-500/10 border-amber-500/20 text-amber-300'
           }`}
         >
-          <AlertTriangle className="w-5 h-5 flex-shrink-0 mt-0.5" />
+          <AlertTriangle className="w-4 h-4 flex-shrink-0 mt-0.5" />
           <div>
-            <h4 className="font-bold text-sm">
+            <h4 className="font-bold text-xs sm:text-sm">
               {budgetRatio >= 1.0 ? 'Dangerous Budget Overdraft!' : 'Approaching Budget Limit Alert'}
             </h4>
-            <p className="text-xs font-medium opacity-85 mt-1">
+            <p className="text-[10px] sm:text-xs font-medium opacity-85 mt-0.5">
               {budgetRatio >= 1.0 
-                ? `You have exceeded your monthly budget of ₹${budget} by ₹${(totalSpentPeriod - budget).toFixed(2)} (${Math.round(budgetRatio * 100)}% spent). Review non-essential purchases.`
+                ? `You have exceeded your monthly budget of ₹${budget} by ₹${(totalSpentPeriod - budget).toFixed(2)} (${Math.round(budgetRatio * 100)}% spent).`
                 : `Caution: You have utilized ${Math.round(budgetRatio * 100)}% (₹${totalSpentPeriod.toFixed(2)}) of your ₹${budget} monthly budget limit.`}
             </p>
           </div>
         </motion.div>
       )}
 
-      {/* 4. Dynamic KPI Cards Grid (4 Columns) */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      {/* 4. Dynamic KPI Cards Grid (Compact 2x2 Grid on Mobile) */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-6">
         {/* Card 1: Expenses */}
-        <div className="glass-card p-6 rounded-3xl flex flex-col justify-between border border-white/5 relative overflow-hidden group hover:border-rose-500/30 transition-all shadow-lg">
+        <div className="glass-card p-3.5 sm:p-6 rounded-2xl sm:rounded-3xl flex flex-col justify-between border border-white/5 relative overflow-hidden group hover:border-rose-500/30 transition-all shadow-lg">
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider">
+            <span className="text-[9px] sm:text-[11px] font-extrabold text-slate-400 uppercase tracking-wider">
               {periodMode === 'lifetime' ? 'Lifetime Expenses' : 'Month Expenses'}
             </span>
-            <div className="w-9 h-9 rounded-xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-400 group-hover:scale-110 transition-transform">
-              <ArrowDownRight className="w-5 h-5" />
+            <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-400 group-hover:scale-110 transition-transform">
+              <ArrowDownRight className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
           </div>
-          <div className="mt-4">
-            <h2 className="text-3xl font-black text-white tracking-tight">₹{totalSpentPeriod.toFixed(2)}</h2>
+          <div className="mt-2.5 sm:mt-4">
+            <h2 className="text-base sm:text-3xl font-black text-white tracking-tight">₹{totalSpentPeriod.toFixed(2)}</h2>
             {budget > 0 && periodMode !== 'lifetime' ? (
-              <div className="flex flex-col gap-1.5 mt-3">
-                <div className="w-full h-2 bg-white/5 rounded-full overflow-hidden">
+              <div className="flex flex-col gap-1 mt-2 sm:mt-3">
+                <div className="w-full h-1.5 sm:h-2 bg-white/5 rounded-full overflow-hidden">
                   <div 
                     style={{ width: `${Math.min(100, budgetRatio * 100)}%` }}
                     className={`h-full rounded-full transition-all duration-500 ${budgetRatio >= 1.0 ? 'bg-rose-500' : budgetRatio >= 0.8 ? 'bg-amber-500' : 'bg-indigo-500'}`}
                   />
                 </div>
-                <div className="flex justify-between text-[10px] font-semibold text-slate-400">
-                  <span>{Math.round(budgetRatio * 100)}% of monthly budget</span>
-                  <span>Limit: ₹{budget}</span>
+                <div className="flex justify-between text-[9px] sm:text-[10px] font-semibold text-slate-400">
+                  <span>{Math.round(budgetRatio * 100)}% budget</span>
+                  <span>₹{budget}</span>
                 </div>
               </div>
             ) : (
-              <span className="text-[10px] font-semibold text-slate-500 mt-3 block">
-                {periodMode === 'lifetime' ? 'Sum of all historical transactions' : 'No budget set for profile'}
+              <span className="text-[9px] sm:text-[10px] font-semibold text-slate-500 mt-2 block truncate">
+                {periodMode === 'lifetime' ? 'Historical total' : 'No budget set'}
               </span>
             )}
           </div>
         </div>
 
         {/* Card 2: Income */}
-        <div className="glass-card p-6 rounded-3xl flex flex-col justify-between border border-white/5 relative overflow-hidden group hover:border-emerald-500/30 transition-all shadow-lg">
+        <div className="glass-card p-3.5 sm:p-6 rounded-2xl sm:rounded-3xl flex flex-col justify-between border border-white/5 relative overflow-hidden group hover:border-emerald-500/30 transition-all shadow-lg">
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider">
+            <span className="text-[9px] sm:text-[11px] font-extrabold text-slate-400 uppercase tracking-wider">
               {periodMode === 'lifetime' ? 'Lifetime Income' : 'Month Income'}
             </span>
-            <div className="w-9 h-9 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 group-hover:scale-110 transition-transform">
-              <ArrowUpRight className="w-5 h-5" />
+            <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 group-hover:scale-110 transition-transform">
+              <ArrowUpRight className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
           </div>
-          <div className="mt-4">
-            <h2 className="text-3xl font-black text-white tracking-tight">₹{totalIncomePeriod.toFixed(2)}</h2>
-            <p className="text-[10px] font-semibold text-slate-500 mt-3">
-              Salary, investments & other earnings
+          <div className="mt-2.5 sm:mt-4">
+            <h2 className="text-base sm:text-3xl font-black text-white tracking-tight">₹{totalIncomePeriod.toFixed(2)}</h2>
+            <p className="text-[9px] sm:text-[10px] font-semibold text-slate-500 mt-2 truncate">
+              Earnings & salary
             </p>
           </div>
         </div>
 
         {/* Card 3: Net Cashflow */}
-        <div className="glass-card p-6 rounded-3xl flex flex-col justify-between border border-white/5 relative overflow-hidden group hover:border-indigo-500/30 transition-all shadow-lg">
+        <div className="glass-card p-3.5 sm:p-6 rounded-2xl sm:rounded-3xl flex flex-col justify-between border border-white/5 relative overflow-hidden group hover:border-indigo-500/30 transition-all shadow-lg">
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider">Net Cashflow</span>
-            <div className={`w-9 h-9 rounded-xl border flex items-center justify-center group-hover:scale-110 transition-transform ${
+            <span className="text-[9px] sm:text-[11px] font-extrabold text-slate-400 uppercase tracking-wider">Net Cashflow</span>
+            <div className={`w-7 h-7 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl border flex items-center justify-center group-hover:scale-110 transition-transform ${
               netSavingsPeriod >= 0 ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400' : 'bg-rose-500/10 border-rose-500/20 text-rose-400'
             }`}>
-              {netSavingsPeriod >= 0 ? <TrendingUp className="w-5 h-5" /> : <TrendingDown className="w-5 h-5" />}
+              {netSavingsPeriod >= 0 ? <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5" /> : <TrendingDown className="w-4 h-4 sm:w-5 sm:h-5" />}
             </div>
           </div>
-          <div className="mt-4">
-            <h2 className={`text-3xl font-black tracking-tight ${netSavingsPeriod >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+          <div className="mt-2.5 sm:mt-4">
+            <h2 className={`text-base sm:text-3xl font-black tracking-tight ${netSavingsPeriod >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
               {netSavingsPeriod >= 0 ? '+' : ''}₹{netSavingsPeriod.toFixed(2)}
             </h2>
-            <p className="text-[10px] font-semibold text-slate-500 mt-3">
-              Income minus expenses in period
+            <p className="text-[9px] sm:text-[10px] font-semibold text-slate-500 mt-2 truncate">
+              Income - expenses
             </p>
           </div>
         </div>
 
         {/* Card 4: Savings Progress */}
-        <div className="glass-card p-6 rounded-3xl flex flex-col justify-between border border-white/5 relative overflow-hidden group hover:border-cyan-500/30 transition-all shadow-lg">
+        <div className="glass-card p-3.5 sm:p-6 rounded-2xl sm:rounded-3xl flex flex-col justify-between border border-white/5 relative overflow-hidden group hover:border-cyan-500/30 transition-all shadow-lg">
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider">Goal Savings</span>
-            <div className="w-9 h-9 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400 group-hover:scale-110 transition-transform">
-              <Target className="w-5 h-5" />
+            <span className="text-[9px] sm:text-[11px] font-extrabold text-slate-400 uppercase tracking-wider">Goal Savings</span>
+            <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400 group-hover:scale-110 transition-transform">
+              <Target className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
           </div>
-          <div className="mt-4">
-            <h2 className="text-3xl font-black text-white tracking-tight">₹{totalCurrentSavings.toFixed(2)}</h2>
+          <div className="mt-2.5 sm:mt-4">
+            <h2 className="text-base sm:text-3xl font-black text-white tracking-tight">₹{totalCurrentSavings.toFixed(2)}</h2>
             {totalTargetSavings > 0 ? (
-              <div className="flex flex-col gap-1.5 mt-3">
-                <div className="w-full h-2 bg-white/5 rounded-full overflow-hidden">
+              <div className="flex flex-col gap-1 mt-2 sm:mt-3">
+                <div className="w-full h-1.5 sm:h-2 bg-white/5 rounded-full overflow-hidden">
                   <div 
                     style={{ width: `${Math.min(100, savingsProgressRatio * 100)}%` }}
                     className="h-full rounded-full bg-cyan-500 transition-all duration-500"
                   />
                 </div>
-                <div className="flex justify-between text-[10px] font-semibold text-slate-400">
-                  <span>{Math.round(savingsProgressRatio * 100)}% target achieved</span>
-                  <span>Target: ₹{totalTargetSavings}</span>
+                <div className="flex justify-between text-[9px] sm:text-[10px] font-semibold text-slate-400">
+                  <span>{Math.round(savingsProgressRatio * 100)}%</span>
+                  <span>₹{totalTargetSavings}</span>
                 </div>
               </div>
             ) : (
-              <span className="text-[10px] font-semibold text-slate-500 mt-3 block">No active goals configured</span>
+              <span className="text-[9px] sm:text-[10px] font-semibold text-slate-500 mt-2 block truncate">No goals configured</span>
             )}
           </div>
         </div>
       </div>
 
       {/* 5. Analytics Charts Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
         {/* Doughnut Chart */}
-        <div className="glass-card p-6 rounded-3xl flex flex-col gap-4 border border-white/5 shadow-xl">
+        <div className="glass-card p-4 sm:p-6 rounded-2xl sm:rounded-3xl flex flex-col gap-3 sm:gap-4 border border-white/5 shadow-xl">
           <div className="flex items-center justify-between">
-            <h3 className="text-sm font-bold text-slate-200 flex items-center gap-2">
+            <h3 className="text-xs sm:text-sm font-bold text-slate-200 flex items-center gap-2">
               <Layers className="w-4 h-4 text-indigo-400" />
               <span>Category Distribution</span>
             </h3>
-            <span className="text-[10px] font-extrabold text-slate-400 bg-white/5 px-2.5 py-1 rounded-full border border-white/5">
+            <span className="text-[9px] sm:text-[10px] font-extrabold text-slate-400 bg-white/5 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full border border-white/5">
               {activeScopeName}
             </span>
           </div>
           {loading ? (
             <div className="h-64 bg-white/5 animate-pulse rounded-2xl" />
           ) : expenses.length === 0 ? (
-            <div className="h-64 flex flex-col items-center justify-center text-slate-500 text-xs font-semibold gap-2 border border-dashed border-white/5 rounded-2xl">
+            <div className="h-56 sm:h-64 flex flex-col items-center justify-center text-slate-500 text-xs font-semibold gap-2 border border-dashed border-white/5 rounded-2xl">
               <Calendar className="w-8 h-8 text-slate-600 opacity-50" />
               <span>No expense records logged for {activeScopeName}</span>
             </div>
@@ -533,20 +535,20 @@ const Dashboard = () => {
         </div>
 
         {/* Line Chart */}
-        <div className="glass-card p-6 rounded-3xl flex flex-col gap-4 border border-white/5 shadow-xl">
+        <div className="glass-card p-4 sm:p-6 rounded-2xl sm:rounded-3xl flex flex-col gap-3 sm:gap-4 border border-white/5 shadow-xl">
           <div className="flex items-center justify-between">
-            <h3 className="text-sm font-bold text-slate-200 flex items-center gap-2">
+            <h3 className="text-xs sm:text-sm font-bold text-slate-200 flex items-center gap-2">
               <TrendingUp className="w-4 h-4 text-cyan-400" />
               <span>Spending Trend</span>
             </h3>
-            <span className="text-[10px] font-extrabold text-slate-400 bg-white/5 px-2.5 py-1 rounded-full border border-white/5">
+            <span className="text-[9px] sm:text-[10px] font-extrabold text-slate-400 bg-white/5 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full border border-white/5">
               {activeScopeName}
             </span>
           </div>
           {loading ? (
             <div className="h-64 bg-white/5 animate-pulse rounded-2xl" />
           ) : expenses.length === 0 ? (
-            <div className="h-64 flex flex-col items-center justify-center text-slate-500 text-xs font-semibold gap-2 border border-dashed border-white/5 rounded-2xl">
+            <div className="h-56 sm:h-64 flex flex-col items-center justify-center text-slate-500 text-xs font-semibold gap-2 border border-dashed border-white/5 rounded-2xl">
               <TrendingUp className="w-8 h-8 text-slate-600 opacity-50" />
               <span>No trend line available for {activeScopeName}</span>
             </div>
@@ -557,9 +559,9 @@ const Dashboard = () => {
       </div>
 
       {/* 6. Dynamic Transactions Feed & Quick Insights */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
         {/* Recent Activity Table (2/3 width) */}
-        <div className="glass-card p-6 rounded-3xl border border-white/5 lg:col-span-2 shadow-xl flex flex-col justify-between">
+        <div className="glass-card p-4 sm:p-6 rounded-2xl sm:rounded-3xl border border-white/5 lg:col-span-2 shadow-xl flex flex-col justify-between">
           <div>
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
               <div>
