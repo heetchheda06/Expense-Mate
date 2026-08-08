@@ -90,7 +90,7 @@ const AiChatBot = () => {
         whileHover={{ scale: 1.1, rotate: 5 }}
         whileTap={{ scale: 0.9 }}
         onClick={() => setIsOpen(!isOpen)}
-        className="w-13 h-13 md:w-14 md:h-14 rounded-full bg-gradient-to-tr from-indigo-600 via-purple-600 to-indigo-500 text-white flex items-center justify-center shadow-[0_6px_24px_rgba(99,102,241,0.5)] border border-white/20 focus:outline-none relative overflow-hidden"
+        className="w-14 h-14 md:w-16 md:h-16 rounded-full bg-gradient-to-tr from-indigo-600 via-purple-600 to-indigo-500 text-white flex items-center justify-center shadow-[0_8px_30px_rgba(99,102,241,0.7)] border-2 border-white/30 focus:outline-none relative overflow-hidden flex-shrink-0"
       >
         <span className="absolute inset-0 bg-white/10 opacity-0 hover:opacity-100 transition-opacity duration-300" />
         <AnimatePresence mode="wait">
@@ -102,7 +102,7 @@ const AiChatBot = () => {
               exit={{ rotate: 90, opacity: 0 }}
               transition={{ duration: 0.2 }}
             >
-              <X className="w-5 h-5 md:w-6 md:h-6" />
+              <X className="w-7 h-7 md:w-8 md:h-8" />
             </motion.div>
           ) : (
             <motion.div
@@ -111,10 +111,10 @@ const AiChatBot = () => {
               animate={{ rotate: 0, opacity: 1 }}
               exit={{ rotate: -90, opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="relative"
+              className="relative flex items-center justify-center"
             >
-              <MessageSquare className="w-5 h-5 md:w-6 md:h-6" />
-              <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-cyan-400 border border-indigo-600 animate-pulse" />
+              <MessageSquare className="w-7 h-7 md:w-8 md:h-8" />
+              <span className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-cyan-400 border-2 border-indigo-700 animate-pulse" />
             </motion.div>
           )}
         </AnimatePresence>
