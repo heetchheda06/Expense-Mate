@@ -84,13 +84,13 @@ const AiChatBot = () => {
   if (!activeProfile) return null;
 
   return (
-    <div className="fixed bottom-20 right-4 md:bottom-6 md:right-6 z-40 font-sans">
+    <div className="fixed bottom-[88px] right-4 md:bottom-8 md:right-8 z-[60] font-sans">
       {/* Floating Action Button */}
       <motion.button
         whileHover={{ scale: 1.1, rotate: 5 }}
         whileTap={{ scale: 0.9 }}
         onClick={() => setIsOpen(!isOpen)}
-        className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-gradient-to-tr from-indigo-600 via-purple-600 to-indigo-500 text-white flex items-center justify-center shadow-[0_4px_20px_rgba(99,102,241,0.4)] border border-white/20 focus:outline-none relative overflow-hidden"
+        className="w-13 h-13 md:w-14 md:h-14 rounded-full bg-gradient-to-tr from-indigo-600 via-purple-600 to-indigo-500 text-white flex items-center justify-center shadow-[0_6px_24px_rgba(99,102,241,0.5)] border border-white/20 focus:outline-none relative overflow-hidden"
       >
         <span className="absolute inset-0 bg-white/10 opacity-0 hover:opacity-100 transition-opacity duration-300" />
         <AnimatePresence mode="wait">
@@ -128,7 +128,7 @@ const AiChatBot = () => {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 50, scale: 0.9 }}
             transition={{ type: 'spring', damping: 25, stiffness: 250 }}
-            className="fixed sm:absolute inset-x-3 bottom-20 sm:bottom-16 sm:right-0 sm:left-auto w-auto sm:w-[400px] h-[480px] sm:h-[550px] rounded-3xl bg-[#0e131f]/95 backdrop-blur-2xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.6)] flex flex-col overflow-hidden z-50"
+            className="fixed sm:absolute inset-x-3 bottom-[88px] sm:bottom-16 sm:right-0 sm:left-auto w-auto sm:w-[400px] h-[480px] sm:h-[550px] rounded-3xl bg-[#0e131f]/95 backdrop-blur-2xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.7)] flex flex-col overflow-hidden z-[65]"
           >
             {/* Glowing Accent Bar */}
             <div className="h-1.5 w-full bg-gradient-to-r from-indigo-500 via-purple-500 to-cyan-500" />
