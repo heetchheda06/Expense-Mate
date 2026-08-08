@@ -110,6 +110,7 @@ const AuthPage = () => {
 
         {/* Brand name */}
         <div className="text-center mb-8">
+          <img src="/logo.png" alt="ExpenseMate Logo" className="w-16 h-16 rounded-2xl mx-auto mb-4 shadow-xl border border-white/15 object-cover" />
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-[10px] font-bold uppercase mb-4 tracking-wider shadow-glow">
             <Sparkles className="w-3.5 h-3.5" />
             <span>Secure Core Authentication</span>

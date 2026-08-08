@@ -15,12 +15,10 @@ const Landing = () => {
 
       {/* Floating Header */}
       <nav className="w-full flex items-center justify-between px-6 md:px-16 py-5 border-b border-white/5 z-20 bg-slate-950/30 backdrop-blur-md sticky top-0">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
+          <img src="/logo.png" alt="ExpenseMate Logo" className="w-10 h-10 rounded-xl shadow-lg border border-white/10 object-cover" />
           <span className="text-2xl font-black bg-gradient-to-r from-indigo-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent tracking-tight">
             ExpenseMate
-          </span>
-          <span className="text-[9px] uppercase font-bold px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">
-            v1.0
           </span>
         </div>
         <div className="flex items-center gap-4">

@@ -73,12 +73,10 @@ const Sidebar = () => {
     <>
       {/* Mobile Sticky Top Header */}
       <header className="md:hidden w-full flex items-center justify-between px-5 py-4 glass-card border-b border-white/5 z-40 sticky top-0">
-        <div className="flex items-center gap-2">
-          <span className="text-xl font-bold tracking-tight bg-gradient-to-r from-indigo-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">
+        <div className="flex items-center gap-2.5">
+          <img src="/logo.png" alt="ExpenseMate Logo" className="w-8 h-8 rounded-lg shadow-md border border-white/10 object-cover" />
+          <span className="text-xl font-extrabold tracking-tight bg-gradient-to-r from-indigo-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">
             ExpenseMate
-          </span>
-          <span className="text-[10px] uppercase font-semibold px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">
-            Beta
           </span>
         </div>
         <div className="flex items-center gap-2">
@@ -119,13 +117,16 @@ const Sidebar = () => {
         <div className="flex flex-col gap-6 z-10 w-full">
           {/* Logo banner */}
           <div className="hidden md:flex items-center justify-between px-2">
-            <div className="flex items-center gap-2">
-              <span className="text-2xl font-extrabold tracking-tight bg-gradient-to-r from-indigo-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">
-                ExpenseMate
-              </span>
-              <span className="text-[9px] uppercase font-extrabold px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
-                AI
-              </span>
+            <div className="flex items-center gap-3">
+              <img src="/logo.png" alt="ExpenseMate Logo" className="w-10 h-10 rounded-xl shadow-lg border border-white/10 object-cover" />
+              <div className="flex flex-col">
+                <span className="text-xl font-black tracking-tight bg-gradient-to-r from-indigo-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent leading-none">
+                  ExpenseMate
+                </span>
+                <span className="text-[9px] uppercase font-bold text-slate-400 tracking-wider mt-1">
+                  Track • Manage • Grow
+                </span>
+              </div>
             </div>
           </div>
 
