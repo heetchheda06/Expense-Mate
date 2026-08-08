@@ -1,0 +1,8 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "app.web.expense_mate_tracker.twa",
+    "sha256_cert_fingerprints": ["4D:75:73:AA:77:23:2F:B7:DB:E9:DD:3A:38:61:91:5C:B7:CA:FE:38:CD:0B:57:1A:83:61:A0:EE:96:C9:7B:E2"]
+  }
+}]
