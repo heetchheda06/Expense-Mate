@@ -325,43 +325,76 @@ ${settlementsList || 'All settled up!'}`;
       return expDate.getFullYear() === now.getFullYear() && expDate.getMonth() === now.getMonth();
     });
     const totalSpentThisMonth = currentMonthExpenses.reduce((sum, exp) => sum + exp.amount, 0);
+    const totalLifetimeSpent = expenses.reduce((sum, exp) => sum + exp.amount, 0);
     const budget = profile.monthlyBudget || 0;
 
-    // Category distribution
+    // Category distribution across all expenses
     const categoryTotals = {};
     expenses.forEach(exp => {
       categoryTotals[exp.category] = (categoryTotals[exp.category] || 0) + exp.amount;
     });
 
+    // Comprehensive Monthly Expense Breakdown (July, August, and all months)
+    const monthGroups = {};
+    expenses.forEach(exp => {
+      const d = new Date(exp.date);
+      const monthKey = d.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+      if (!monthGroups[monthKey]) {
+        monthGroups[monthKey] = {
+          total: 0,
+          categories: {},
+          items: []
+        };
+      }
+      monthGroups[monthKey].total += exp.amount;
+      monthGroups[monthKey].categories[exp.category] = (monthGroups[monthKey].categories[exp.category] || 0) + exp.amount;
+      monthGroups[monthKey].items.push(`- ${exp.title || exp.category}: ₹${exp.amount} on ${new Date(exp.date).toLocaleDateString()} (Category: ${exp.category}${exp.notes ? ', Notes: ' + exp.notes : ''})`);
+    });
+
+    const fullMonthlyBreakdown = Object.keys(monthGroups).map(monthName => {
+      const group = monthGroups[monthName];
+      const catSummary = Object.entries(group.categories).map(([cat, amt]) => `${cat}: ₹${amt.toFixed(2)}`).join(', ');
+      const itemsList = group.items.join('\n');
+      return `### Month: ${monthName}
+Total Month Spent: ₹${group.total.toFixed(2)}
+Category Totals: ${catSummary}
+Transactions in ${monthName}:
+${itemsList}`;
+    }).join('\n\n');
+
     const goalsSummary = goals.map(g => {
       return `- ${g.name}: Target ₹${g.targetAmount}, Saved ₹${g.currentAmount}, Deadline: ${new Date(g.deadline).toLocaleDateString()}`;
     }).join('\n');
 
-    const incomesSummary = incomes.slice(0, 10).map(inc => {
+    const incomesSummary = incomes.slice(0, 15).map(inc => {
       return `- ${inc.source}: ₹${inc.amount} on ${new Date(inc.date).toLocaleDateString()}`;
     }).join('\n');
 
-    const expensesSummary = currentMonthExpenses.slice(0, 10).map(exp => {
-      return `- ${exp.description || exp.category}: ₹${exp.amount} on ${new Date(exp.date).toLocaleDateString()} (${exp.category})`;
-    }).join('\n');
-
     // Build the context system instruction
-    const systemPrompt = `You are ExpenseMate AI, a helpful, context-aware personal financial assistant. You are chatting with a user named ${profile.name}.
-Here is their financial overview:
-- Monthly Budget: ₹${budget}
-- Total Spent this month: ₹${totalSpentThisMonth.toFixed(2)}
-- Spending by category: ${JSON.stringify(categoryTotals)}
-- Active Savings Goals:
-${goalsSummary || 'No active goals.'}
-- Recent Income entries:
-${incomesSummary || 'No income entries.'}
-- Recent Expense entries (this month):
-${expensesSummary || 'No recent expenses.'}
+    const systemPrompt = `You are ExpenseMate AI, an intelligent, context-aware personal financial advisor. You are chatting with a user named ${profile.name}.
+Here is their complete financial overview and historical transaction data:
+- Monthly Budget Limit: ₹${budget}
+- Current Month (${now.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}) Spent: ₹${totalSpentThisMonth.toFixed(2)}
+- Lifetime Total Spent across all months: ₹${totalLifetimeSpent.toFixed(2)}
+- Lifetime Spending by category: ${JSON.stringify(categoryTotals)}
 
-- Trip Splitter details (for group splitting, kitty contributions, direct payments, and settlements):
+=== COMPLETE MONTHLY EXPENSE & TRANSACTION HISTORY ===
+${fullMonthlyBreakdown || 'No expense transactions recorded yet.'}
+
+=== ACTIVE SAVINGS GOALS ===
+${goalsSummary || 'No active goals.'}
+
+=== RECENT INCOME ENTRIES ===
+${incomesSummary || 'No income entries.'}
+
+=== TRIP SPLITTER DETAILS ===
 ${tripsSummary}
 
-Use this context to answer their questions. Keep your answers concise, encouraging, and focused on practical personal saving strategies. Always use Rupee symbol (₹) for currency. Refer to them by name (${profile.name}) occasionally to make it personal.`;
+Instructions for responding:
+1. You have complete access to the user's expense history across ALL months (July, August, etc.). When asked to analyze a specific month (e.g. July, August, or lifetime), reference the exact transaction totals, categories, and items for that month provided in the historical breakdown above.
+2. Keep your answers clear, practical, encouraging, and focused on helpful financial insights.
+3. Always use the Indian Rupee symbol (₹) for currency values.
+4. Address the user by name (${profile.name}) to personalize your advice.`;
 
     const contents = [];
     if (history && Array.isArray(history)) {
