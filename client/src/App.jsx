@@ -91,7 +91,7 @@ const AppLayout = () => {
             <Route path="/settings" element={<ProtectedRoute><AnimatedPageWrapper><Settings /></AnimatedPageWrapper></ProtectedRoute>} />
             <Route path="/trips" element={<ProtectedRoute><AnimatedPageWrapper><TripSplitter /></AnimatedPageWrapper></ProtectedRoute>} />
             <Route path="/login" element={<Navigate to="/dashboard" replace />} />
-            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+            <Route path="/" element={<Landing />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>

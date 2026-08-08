@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import { useProfiles } from '../context/ProfileContext';
 import { useToast } from '../context/ToastContext';
 import api from '../services/api';
-import { Plus, Trash2, Edit2, Check, User, Briefcase, Flame, Sparkles, DollarSign, Target, Lock, KeyRound, ShieldCheck, Loader, Eye, EyeOff } from 'lucide-react';
+import { Plus, Trash2, Edit2, Check, User, Briefcase, Flame, Sparkles, DollarSign, Target, Lock, KeyRound, ShieldCheck, Loader, Eye, EyeOff, LogOut } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const Settings = () => {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
   const { profiles, activeProfile, addProfile, updateProfile, deleteProfile, selectProfile } = useProfiles();
   const { showToast } = useToast();
 
@@ -433,6 +437,31 @@ const Settings = () => {
             </button>
           </div>
         </form>
+      </div>
+
+      {/* Account Session & Sign Out */}
+      <div className="glass-card p-6 rounded-2xl border border-rose-500/20 bg-rose-500/5 mt-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h3 className="text-sm font-bold text-slate-100 flex items-center gap-2">
+              <LogOut className="w-4 h-4 text-rose-400" />
+              <span>Account Session</span>
+            </h3>
+            <p className="text-xs text-slate-400 mt-1 font-medium">
+              Signed in as <span className="text-slate-200 font-semibold">{user?.email}</span>. Click below to sign out securely.
+            </p>
+          </div>
+          <button
+            onClick={() => {
+              logout();
+              navigate('/login');
+            }}
+            className="py-2.5 px-6 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/30 font-bold text-xs flex items-center justify-center gap-2 transition-all shadow-md"
+          >
+            <LogOut className="w-4 h-4" />
+            <span>Sign Out of Account</span>
+          </button>
+        </div>
       </div>
     </div>
   );

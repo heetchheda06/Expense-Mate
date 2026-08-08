@@ -81,16 +81,23 @@ const Sidebar = () => {
             Beta
           </span>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           {/* Active profile dot indicators */}
           {activeProfile && (
             <div 
               style={{ backgroundColor: activeProfile.color }} 
-              className="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-xs"
+              className="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-xs shadow-md"
             >
               {activeProfile.name[0].toUpperCase()}
             </div>
           )}
+          <button 
+            onClick={handleLogout}
+            title="Log Out"
+            className="p-2 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 transition-colors"
+          >
+            <LogOut className="w-5 h-5" />
+          </button>
           <button 
             onClick={() => setIsOpen(!isOpen)}
             className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-slate-100 transition-colors"

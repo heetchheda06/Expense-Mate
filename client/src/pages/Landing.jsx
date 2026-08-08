@@ -1,9 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, TrendingUp, ScanBarcode, Target, BrainCircuit, ShieldAlert, Sparkles } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
+import { ArrowRight, TrendingUp, ScanBarcode, Target, BrainCircuit, ShieldAlert, Sparkles, LayoutDashboard } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const Landing = () => {
+  const { user } = useAuth();
+
   return (
     <div className="min-h-screen bg-[#080B11] text-slate-100 flex flex-col relative overflow-hidden">
       {/* Decorative Gradient Glow Blobs */}
@@ -21,12 +24,21 @@ const Landing = () => {
           </span>
         </div>
         <div className="flex items-center gap-4">
-          <Link to="/login" className="text-sm font-semibold text-slate-300 hover:text-white transition-colors">
-            Sign In
-          </Link>
-          <Link to="/login?mode=register" className="btn-primary text-xs py-2 px-4 shadow-glow">
-            Get Started
-          </Link>
+          {user ? (
+            <Link to="/dashboard" className="btn-primary text-xs py-2 px-5 shadow-glow flex items-center gap-2">
+              <LayoutDashboard className="w-4 h-4" />
+              <span>Go to Dashboard</span>
+            </Link>
+          ) : (
+            <>
+              <Link to="/login" className="text-sm font-semibold text-slate-300 hover:text-white transition-colors">
+                Sign In
+              </Link>
+              <Link to="/login?mode=register" className="btn-primary text-xs py-2 px-4 shadow-glow">
+                Get Started
+              </Link>
+            </>
+          )}
         </div>
       </nav>
 
@@ -69,13 +81,23 @@ const Landing = () => {
           transition={{ duration: 0.5, delay: 0.45 }}
           className="flex flex-col sm:flex-row gap-4"
         >
-          <Link to="/login?mode=register" className="btn-primary text-sm py-3 px-8 flex items-center justify-center gap-2 group shadow-lg">
-            <span>Start Tracking Now</span>
-            <ArrowRight className="w-4.5 h-4.5 group-hover:translate-x-1 transition-transform" />
-          </Link>
-          <Link to="/login" className="btn-glass text-sm py-3 px-8 flex items-center justify-center">
-            View Live Demo
-          </Link>
+          {user ? (
+            <Link to="/dashboard" className="btn-primary text-sm py-3.5 px-8 flex items-center justify-center gap-2 group shadow-xl">
+              <LayoutDashboard className="w-5 h-5" />
+              <span>Enter Expenses Dashboard</span>
+              <ArrowRight className="w-4.5 h-4.5 group-hover:translate-x-1 transition-transform" />
+            </Link>
+          ) : (
+            <>
+              <Link to="/login?mode=register" className="btn-primary text-sm py-3 px-8 flex items-center justify-center gap-2 group shadow-lg">
+                <span>Start Tracking Now</span>
+                <ArrowRight className="w-4.5 h-4.5 group-hover:translate-x-1 transition-transform" />
+              </Link>
+              <Link to="/login" className="btn-glass text-sm py-3 px-8 flex items-center justify-center">
+                View Live Demo
+              </Link>
+            </>
+          )}
         </motion.div>
 
         {/* Feature Grid */}
