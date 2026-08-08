@@ -1,6 +1,6 @@
 {
   "name": "expensemate-server",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Production-ready backend API for ExpenseMate",
   "main": "index.js",
   "scripts": {
