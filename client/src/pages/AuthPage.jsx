@@ -1,15 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Mail, Lock, User, Eye, EyeOff, Sparkles, Loader } from 'lucide-react';
+import { useToast } from '../context/ToastContext';
+import api from '../services/api';
+import { Mail, Lock, User, Eye, EyeOff, Sparkles, Loader, KeyRound, ArrowLeft } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const AuthPage = () => {
   const { login, register, user } = useAuth();
+  const { showToast } = useToast();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   
-  const [isRegister, setIsRegister] = useState(false);
+  // mode can be 'login' | 'register' | 'forgot'
+  const [authMode, setAuthMode] = useState('login');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -17,6 +21,7 @@ const AuthPage = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
 
   // Auto redirect if already authenticated
   useEffect(() => {
@@ -28,18 +33,55 @@ const AuthPage = () => {
   // Sync mode with URL queries (e.g. ?mode=register)
   useEffect(() => {
     const mode = searchParams.get('mode');
-    setIsRegister(mode === 'register');
+    if (mode === 'register') {
+      setAuthMode('register');
+    } else {
+      setAuthMode('login');
+    }
   }, [searchParams]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!email || !password || (isRegister && !name)) {
+
+    if (authMode === 'forgot') {
+      if (!email || !password) {
+        showToast('Please provide your email and new password', 'warning');
+        return;
+      }
+      if (password.length < 6) {
+        showToast('Password must be at least 6 characters', 'warning');
+        return;
+      }
+      if (password !== confirmPassword) {
+        showToast('Passwords do not match', 'warning');
+        return;
+      }
+
+      setLoading(true);
+      try {
+        const res = await api.post('/auth/forgot-password', { email, newPassword: password });
+        if (res.data.success) {
+          showToast(res.data.message || 'Password reset successfully!', 'success');
+          setAuthMode('login');
+          setPassword('');
+          setConfirmPassword('');
+        }
+      } catch (err) {
+        showToast(err.response?.data?.message || 'Failed to reset password', 'error');
+      } finally {
+        setLoading(false);
+      }
+      return;
+    }
+
+    if (!email || !password || (authMode === 'register' && !name)) {
+      showToast('Please fill in all required fields', 'warning');
       return;
     }
 
     setLoading(true);
     let success = false;
-    if (isRegister) {
+    if (authMode === 'register') {
       success = await register(name, email, password);
     } else {
       success = await login(email, password);
@@ -73,16 +115,20 @@ const AuthPage = () => {
             <span>Secure Core Authentication</span>
           </div>
           <h2 className="text-3xl font-extrabold tracking-tight">
-            {isRegister ? 'Create Account' : 'Welcome Back'}
+            {authMode === 'register' ? 'Create Account' : authMode === 'forgot' ? 'Reset Password' : 'Welcome Back'}
           </h2>
           <p className="text-sm text-slate-400 mt-2 font-medium">
-            {isRegister ? 'Sign up to launch your ExpenseMate journey' : 'Sign in to access your ExpenseMate dashboard'}
+            {authMode === 'register' 
+              ? 'Sign up to launch your ExpenseMate journey' 
+              : authMode === 'forgot'
+              ? 'Enter your email and set a new password for your account'
+              : 'Sign in to access your ExpenseMate dashboard'}
           </p>
         </div>
 
         {/* Form Body */}
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          {isRegister && (
+          {authMode === 'register' && (
             <div className="flex flex-col gap-1.5">
               <label className="text-xs font-semibold text-slate-300 pl-1">Full Name</label>
               <div className="relative">
@@ -115,7 +161,24 @@ const AuthPage = () => {
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-semibold text-slate-300 pl-1">Password</label>
+            <div className="flex justify-between items-center pr-1">
+              <label className="text-xs font-semibold text-slate-300 pl-1">
+                {authMode === 'forgot' ? 'New Password' : 'Password'}
+              </label>
+              {authMode === 'login' && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setAuthMode('forgot');
+                    setPassword('');
+                    setConfirmPassword('');
+                  }}
+                  className="text-xs font-semibold text-indigo-400 hover:text-indigo-300 transition-colors"
+                >
+                  Forgot Password?
+                </button>
+              )}
+            </div>
             <div className="relative">
               <Lock className="absolute left-3 top-3.5 w-5 h-5 text-slate-400" />
               <input
@@ -136,6 +199,23 @@ const AuthPage = () => {
             </div>
           </div>
 
+          {authMode === 'forgot' && (
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-semibold text-slate-300 pl-1">Confirm New Password</label>
+              <div className="relative">
+                <KeyRound className="absolute left-3 top-3.5 w-5 h-5 text-slate-400" />
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="••••••••"
+                  required
+                  className="w-full glass-input pl-10 pr-10 text-sm font-medium"
+                />
+              </div>
+            </div>
+          )}
+
           <button
             type="submit"
             disabled={loading}
@@ -144,27 +224,45 @@ const AuthPage = () => {
             {loading ? (
               <Loader className="w-5 h-5 animate-spin" />
             ) : (
-              <span>{isRegister ? 'Sign Up' : 'Sign In'}</span>
+              <span>
+                {authMode === 'register' 
+                  ? 'Sign Up' 
+                  : authMode === 'forgot'
+                  ? 'Reset & Update Password'
+                  : 'Sign In'}
+              </span>
             )}
           </button>
         </form>
 
         {/* Footer State toggle */}
         <div className="text-center mt-6 text-xs font-medium">
-          <span className="text-slate-400">
-            {isRegister ? 'Already have an account? ' : "Don't have an account? "}
-          </span>
-          <button
-            onClick={() => {
-              setIsRegister(!isRegister);
-              setName('');
-              setEmail('');
-              setPassword('');
-            }}
-            className="text-indigo-400 hover:text-indigo-300 font-bold underline transition-colors"
-          >
-            {isRegister ? 'Sign In' : 'Register Here'}
-          </button>
+          {authMode === 'forgot' ? (
+            <button
+              onClick={() => setAuthMode('login')}
+              className="inline-flex items-center gap-1.5 text-indigo-400 hover:text-indigo-300 font-bold transition-colors"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              <span>Back to Sign In</span>
+            </button>
+          ) : (
+            <>
+              <span className="text-slate-400">
+                {authMode === 'register' ? 'Already have an account? ' : "Don't have an account? "}
+              </span>
+              <button
+                onClick={() => {
+                  setAuthMode(authMode === 'register' ? 'login' : 'register');
+                  setName('');
+                  setEmail('');
+                  setPassword('');
+                }}
+                className="text-indigo-400 hover:text-indigo-300 font-bold underline transition-colors"
+              >
+                {authMode === 'register' ? 'Sign In' : 'Register Here'}
+              </button>
+            </>
+          )}
         </div>
       </motion.div>
     </div>

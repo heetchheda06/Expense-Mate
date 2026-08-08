@@ -4,8 +4,25 @@ import { useProfiles } from '../context/ProfileContext';
 import { CardSkeleton, ChartSkeleton } from '../components/Skeleton';
 import { CategoryDoughnutChart, SpendingTrendChart } from '../charts/CustomCharts';
 import api from '../services/api';
-import { ArrowUpRight, ArrowDownRight, Wallet, Target, Sparkles, AlertTriangle, Scan, BrainCircuit, PlusCircle } from 'lucide-react';
+import { 
+  ArrowUpRight, ArrowDownRight, Wallet, Target, Sparkles, AlertTriangle, 
+  Scan, BrainCircuit, PlusCircle, Calendar, Infinity, Filter, RefreshCw
+} from 'lucide-react';
 import { motion } from 'framer-motion';
+
+const getCurrentMonthString = () => {
+  const d = new Date();
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  return `${year}-${month}`;
+};
+
+const formatMonthLabel = (monthStr) => {
+  if (!monthStr) return '';
+  const [year, month] = monthStr.split('-').map(Number);
+  const date = new Date(year, month - 1, 1);
+  return date.toLocaleDateString('default', { month: 'long', year: 'numeric' });
+};
 
 const Dashboard = () => {
   const { activeProfile, loading: profilesLoading } = useProfiles();
@@ -16,14 +33,28 @@ const Dashboard = () => {
   const [incomes, setIncomes] = useState([]);
   const [goals, setGoals] = useState([]);
 
-  // Fetch all related financial transactions for the active profile
+  // Period / Month Selector State
+  // mode: 'current' | 'custom' | 'lifetime'
+  const [periodMode, setPeriodMode] = useState('current');
+  const [customMonth, setCustomMonth] = useState(getCurrentMonthString());
+
+  // Fetch financial records filtered by the selected period
   const fetchDashboardData = useCallback(async () => {
     if (!activeProfile) return;
     setLoading(true);
     try {
+      let params = {};
+      if (periodMode === 'current') {
+        params.month = getCurrentMonthString();
+      } else if (periodMode === 'custom') {
+        params.month = customMonth;
+      } else if (periodMode === 'lifetime') {
+        params.range = 'lifetime';
+      }
+
       const [expRes, incRes, goalRes] = await Promise.all([
-        api.get(`/profiles/${activeProfile._id}/expenses`),
-        api.get(`/profiles/${activeProfile._id}/incomes`),
+        api.get(`/profiles/${activeProfile._id}/expenses`, { params }),
+        api.get(`/profiles/${activeProfile._id}/incomes`, { params }),
         api.get(`/profiles/${activeProfile._id}/goals`)
       ]);
 
@@ -35,7 +66,7 @@ const Dashboard = () => {
     } finally {
       setLoading(false);
     }
-  }, [activeProfile]);
+  }, [activeProfile, periodMode, customMonth]);
 
   useEffect(() => {
     fetchDashboardData();
@@ -68,7 +99,7 @@ const Dashboard = () => {
           </div>
           <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight mb-3">Set Up Your First Profile</h2>
           <p className="text-sm text-slate-400 font-medium mb-8 leading-relaxed">
-            Welcome to ExpenseMate! To start tracking your expenses, incomes, and savings goals, you must first create a budget profile (e.g. Personal, Family, Travel, Office).
+            Welcome to ExpenseMate! To start tracking your expenses, incomes, and savings goals, create a budget profile first.
           </p>
           <button 
             onClick={() => navigate('/settings')}
@@ -81,23 +112,24 @@ const Dashboard = () => {
     );
   }
 
-  // Compute metrics
-  const now = new Date();
-  const currentMonthExpenses = expenses.filter(exp => {
-    const expDate = new Date(exp.date);
-    return expDate.getFullYear() === now.getFullYear() && expDate.getMonth() === now.getMonth();
-  });
-
-  const totalSpentThisMonth = currentMonthExpenses.reduce((sum, exp) => sum + exp.amount, 0);
-  const totalIncome = incomes.reduce((sum, inc) => sum + inc.amount, 0);
+  // Compute metrics for selected period
+  const totalSpentPeriod = expenses.reduce((sum, exp) => sum + exp.amount, 0);
+  const totalIncomePeriod = incomes.reduce((sum, inc) => sum + inc.amount, 0);
   
   const budget = activeProfile.monthlyBudget || 0;
-  const budgetRatio = budget > 0 ? (totalSpentThisMonth / budget) : 0;
+  const budgetRatio = budget > 0 ? (totalSpentPeriod / budget) : 0;
 
   // Compile savings status
   const totalTargetSavings = goals.reduce((sum, g) => sum + g.targetAmount, 0);
   const totalCurrentSavings = goals.reduce((sum, g) => sum + g.currentAmount, 0);
   const savingsProgressRatio = totalTargetSavings > 0 ? (totalCurrentSavings / totalTargetSavings) : 0;
+
+  // Label for active period scope
+  const activePeriodTitle = periodMode === 'current'
+    ? `Current Month (${formatMonthLabel(getCurrentMonthString())})`
+    : periodMode === 'custom'
+    ? formatMonthLabel(customMonth)
+    : 'Lifetime / All Time';
 
   return (
     <motion.div 
@@ -111,7 +143,7 @@ const Dashboard = () => {
       <div className="glow-blob top-10 right-10 scale-75" />
 
       {/* Header welcome banner */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 text-indigo-400 font-bold text-xs uppercase tracking-wider mb-1">
             <Sparkles className="w-4 h-4" />
@@ -148,8 +180,73 @@ const Dashboard = () => {
         </div>
       </div>
 
+      {/* Job 1: Month / Period Filter Toolbar */}
+      <div className="glass-card p-4 rounded-2xl border border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-lg">
+        <div className="flex items-center gap-2 text-xs font-bold text-slate-300">
+          <Filter className="w-4 h-4 text-indigo-400" />
+          <span>Dashboard Scope:</span>
+          <span className="text-indigo-400 bg-indigo-500/10 px-2.5 py-1 rounded-lg border border-indigo-500/20">
+            {activePeriodTitle}
+          </span>
+        </div>
+
+        <div className="flex items-center gap-2 flex-wrap w-full sm:w-auto">
+          {/* Current Month Button */}
+          <button
+            onClick={() => setPeriodMode('current')}
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 border ${
+              periodMode === 'current'
+                ? 'bg-indigo-600 text-white border-indigo-500 shadow-glow shadow-indigo-500/30'
+                : 'bg-slate-900/50 text-slate-400 border-white/5 hover:text-slate-200'
+            }`}
+          >
+            <Calendar className="w-3.5 h-3.5" />
+            <span>Current Month</span>
+          </button>
+
+          {/* Select Specific Month Picker */}
+          <div className="flex items-center gap-1.5">
+            <button
+              onClick={() => setPeriodMode('custom')}
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 border ${
+                periodMode === 'custom'
+                  ? 'bg-indigo-600 text-white border-indigo-500 shadow-glow shadow-indigo-500/30'
+                  : 'bg-slate-900/50 text-slate-400 border-white/5 hover:text-slate-200'
+              }`}
+            >
+              <Calendar className="w-3.5 h-3.5" />
+              <span>Select Month</span>
+            </button>
+            {periodMode === 'custom' && (
+              <input
+                type="month"
+                value={customMonth}
+                onChange={(e) => {
+                  setCustomMonth(e.target.value);
+                  setPeriodMode('custom');
+                }}
+                className="glass-input text-xs py-1 px-2.5 font-bold rounded-xl border border-indigo-500/40 text-slate-100 bg-slate-900/90"
+              />
+            )}
+          </div>
+
+          {/* Lifetime View Button */}
+          <button
+            onClick={() => setPeriodMode('lifetime')}
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 border ${
+              periodMode === 'lifetime'
+                ? 'bg-indigo-600 text-white border-indigo-500 shadow-glow shadow-indigo-500/30'
+                : 'bg-slate-900/50 text-slate-400 border-white/5 hover:text-slate-200'
+            }`}
+          >
+            <Infinity className="w-3.5 h-3.5" />
+            <span>Lifetime</span>
+          </button>
+        </div>
+      </div>
+
       {/* Budget Overdraft Warning Alerts */}
-      {budget > 0 && budgetRatio >= 0.8 && (
+      {budget > 0 && budgetRatio >= 0.8 && periodMode !== 'lifetime' && (
         <motion.div 
           initial={{ opacity: 0, scale: 0.98 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -166,8 +263,8 @@ const Dashboard = () => {
             </h4>
             <p className="text-xs font-medium opacity-85 mt-1">
               {budgetRatio >= 1.0 
-                ? `You have exceeded your monthly budget of ₹${budget} by ₹${(totalSpentThisMonth - budget).toFixed(2)} (${Math.round(budgetRatio * 100)}% spent). Review and freeze non-essential purchases.`
-                : `Caution: You have utilized ${Math.round(budgetRatio * 100)}% (₹${totalSpentThisMonth.toFixed(2)}) of your ₹${budget} monthly budget limit.`}
+                ? `You have exceeded your monthly budget of ₹${budget} by ₹${(totalSpentPeriod - budget).toFixed(2)} (${Math.round(budgetRatio * 100)}% spent). Review non-essential purchases.`
+                : `Caution: You have utilized ${Math.round(budgetRatio * 100)}% (₹${totalSpentPeriod.toFixed(2)}) of your ₹${budget} monthly budget limit.`}
             </p>
           </div>
         </motion.div>
@@ -175,17 +272,19 @@ const Dashboard = () => {
 
       {/* Summary KPI Cards Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {/* Month Spending Card */}
+        {/* Month / Selected Period Spending Card */}
         <div className="glass-card p-6 rounded-2xl flex flex-col justify-between h-36 border border-white/5 relative overflow-hidden">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Month Expenses</span>
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+              {periodMode === 'lifetime' ? 'Lifetime Expenses' : 'Month Expenses'}
+            </span>
             <div className="w-8 h-8 rounded-lg bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-400">
               <ArrowDownRight className="w-5 h-5" />
             </div>
           </div>
           <div className="mt-2">
-            <h2 className="text-2xl font-black">₹{totalSpentThisMonth.toFixed(2)}</h2>
-            {budget > 0 ? (
+            <h2 className="text-2xl font-black">₹{totalSpentPeriod.toFixed(2)}</h2>
+            {budget > 0 && periodMode !== 'lifetime' ? (
               <div className="flex flex-col gap-1 mt-2">
                 <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden">
                   <div 
@@ -199,7 +298,9 @@ const Dashboard = () => {
                 </div>
               </div>
             ) : (
-              <span className="text-[10px] font-semibold text-slate-500 mt-2 block">No budget set for this profile</span>
+              <span className="text-[10px] font-semibold text-slate-500 mt-2 block">
+                {periodMode === 'lifetime' ? 'Total spent across all records' : 'No budget limit active'}
+              </span>
             )}
           </div>
         </div>
@@ -207,14 +308,18 @@ const Dashboard = () => {
         {/* Total Incomes Card */}
         <div className="glass-card p-6 rounded-2xl flex flex-col justify-between h-36 border border-white/5 relative overflow-hidden">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Income</span>
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+              {periodMode === 'lifetime' ? 'Lifetime Income' : 'Month Income'}
+            </span>
             <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
               <ArrowUpRight className="w-5 h-5" />
             </div>
           </div>
           <div className="mt-2">
-            <h2 className="text-2xl font-black">₹{totalIncome.toFixed(2)}</h2>
-            <p className="text-[10px] font-semibold text-slate-500 mt-2">Sum of salary, wages, investments & other income</p>
+            <h2 className="text-2xl font-black">₹{totalIncomePeriod.toFixed(2)}</h2>
+            <p className="text-[10px] font-semibold text-slate-500 mt-2">
+              {periodMode === 'lifetime' ? 'Cumulative income recorded' : 'Income earned in selected period'}
+            </p>
           </div>
         </div>
 
@@ -253,13 +358,29 @@ const Dashboard = () => {
         {/* Doughnut Chart */}
         <div className="glass-card p-6 rounded-2xl flex flex-col gap-4 border border-white/5">
           <h3 className="text-sm font-bold text-slate-300">Category Spending Distribution</h3>
-          {loading ? <div className="h-60 bg-white/5 animate-pulse rounded-xl" /> : <CategoryDoughnutChart expenses={expenses} />}
+          {loading ? (
+            <div className="h-60 bg-white/5 animate-pulse rounded-xl" />
+          ) : expenses.length === 0 ? (
+            <div className="h-60 flex items-center justify-center text-slate-500 text-xs font-semibold">
+              No expense records found for {activePeriodTitle}.
+            </div>
+          ) : (
+            <CategoryDoughnutChart expenses={expenses} />
+          )}
         </div>
 
         {/* Line Chart */}
         <div className="glass-card p-6 rounded-2xl flex flex-col gap-4 border border-white/5">
-          <h3 className="text-sm font-bold text-slate-300">Recent Spending Trend</h3>
-          {loading ? <div className="h-60 bg-white/5 animate-pulse rounded-xl" /> : <SpendingTrendChart expenses={expenses} />}
+          <h3 className="text-sm font-bold text-slate-300">Spending Trend ({activePeriodTitle})</h3>
+          {loading ? (
+            <div className="h-60 bg-white/5 animate-pulse rounded-xl" />
+          ) : expenses.length === 0 ? (
+            <div className="h-60 flex items-center justify-center text-slate-500 text-xs font-semibold">
+              No trend data available for {activePeriodTitle}.
+            </div>
+          ) : (
+            <SpendingTrendChart expenses={expenses} />
+          )}
         </div>
       </div>
 
@@ -268,7 +389,9 @@ const Dashboard = () => {
         {/* Recent Activity feed (2/3 width) */}
         <div className="glass-card p-6 rounded-2xl border border-white/5 lg:col-span-2">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-sm font-bold text-slate-300">Recent Transactions</h3>
+            <h3 className="text-sm font-bold text-slate-300">
+              Transactions ({activePeriodTitle})
+            </h3>
             <button 
               onClick={() => navigate('/expenses')}
               className="text-xs font-semibold text-indigo-400 hover:text-indigo-300"
@@ -283,11 +406,11 @@ const Dashboard = () => {
             </div>
           ) : expenses.length === 0 ? (
             <div className="text-center py-8 text-xs font-semibold text-slate-500">
-              No transactions recorded. Add an expense or scan a receipt!
+              No transactions recorded for {activePeriodTitle}. Add an expense or scan a receipt!
             </div>
           ) : (
             <div className="flex flex-col gap-2.5">
-              {expenses.slice(0, 4).map((exp) => (
+              {expenses.slice(0, 5).map((exp) => (
                 <div key={exp._id} className="flex items-center justify-between p-3.5 rounded-xl bg-slate-900/40 hover:bg-slate-900/80 border border-white/5 transition-colors">
                   <div className="flex items-center gap-3">
                     <div className="px-2.5 py-1.5 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-xs font-bold text-indigo-300">
@@ -308,9 +431,9 @@ const Dashboard = () => {
         {/* Quick Tips and Active Profile details (1/3 width) */}
         <div className="glass-card p-6 rounded-2xl border border-white/5 flex flex-col justify-between">
           <div>
-            <h3 className="text-sm font-bold text-slate-300 mb-4">Quick Financial Tip</h3>
+            <h3 className="text-sm font-bold text-slate-300 mb-4">Financial Insight</h3>
             <div className="p-4 rounded-xl bg-indigo-500/5 border border-indigo-500/10 text-xs font-medium text-slate-300 leading-relaxed">
-              "Make coffee at home! Brewing coffee and packing lunches rather than eating out can save you ₹1000+ weekly. Put these savings directly towards your active goals!"
+              "Selecting custom months or Lifetime view allows you to compare seasonal spending habits and evaluate your true long-term budget efficiency!"
             </div>
           </div>
           <div className="border-t border-white/5 mt-4 pt-4 flex items-center justify-between">

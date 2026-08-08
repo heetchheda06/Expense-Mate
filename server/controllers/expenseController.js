@@ -15,7 +15,7 @@ exports.getExpenses = async (req, res) => {
       return res.status(401).json({ success: false, message: 'Not authorized for this profile' });
     }
 
-    const { category, search, startDate, endDate, range } = req.query;
+    const { category, search, startDate, endDate, range, month } = req.query;
     const query = { profileId: req.params.id };
 
     // Apply category filter
@@ -28,12 +28,19 @@ exports.getExpenses = async (req, res) => {
       query.title = { $regex: search, $options: 'i' };
     }
 
-    // Apply date filters
-    if (startDate || endDate) {
+    // Apply date / month / range filters
+    if (month) {
+      const [year, monthNum] = month.split('-').map(Number);
+      if (year && monthNum) {
+        const startOfMonth = new Date(year, monthNum - 1, 1, 0, 0, 0, 0);
+        const endOfMonth = new Date(year, monthNum, 0, 23, 59, 59, 999);
+        query.date = { $gte: startOfMonth, $lte: endOfMonth };
+      }
+    } else if (startDate || endDate) {
       query.date = {};
       if (startDate) query.date.$gte = new Date(startDate);
       if (endDate) query.date.$lte = new Date(endDate);
-    } else if (range) {
+    } else if (range && range !== 'lifetime') {
       const now = new Date();
       query.date = {};
       
@@ -45,6 +52,7 @@ exports.getExpenses = async (req, res) => {
         query.date.$gte = oneMonthAgo;
       }
     }
+    // If range === 'lifetime', no date query constraint is set (returns all historical records)
 
     const expenses = await Expense.find(query).sort({ date: -1 });
     res.status(200).json({ success: true, count: expenses.length, data: expenses });

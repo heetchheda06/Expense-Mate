@@ -15,7 +15,30 @@ exports.getIncomes = async (req, res) => {
       return res.status(401).json({ success: false, message: 'Not authorized' });
     }
 
-    const incomes = await Income.find({ profileId: req.params.id }).sort({ date: -1 });
+    const { month, range, startDate, endDate } = req.query;
+    const query = { profileId: req.params.id };
+
+    if (month) {
+      const [year, monthNum] = month.split('-').map(Number);
+      if (year && monthNum) {
+        const startOfMonth = new Date(year, monthNum - 1, 1, 0, 0, 0, 0);
+        const endOfMonth = new Date(year, monthNum, 0, 23, 59, 59, 999);
+        query.date = { $gte: startOfMonth, $lte: endOfMonth };
+      }
+    } else if (startDate || endDate) {
+      query.date = {};
+      if (startDate) query.date.$gte = new Date(startDate);
+      if (endDate) query.date.$lte = new Date(endDate);
+    } else if (range && range !== 'lifetime') {
+      const now = new Date();
+      query.date = {};
+      if (range === 'month') {
+        const oneMonthAgo = new Date(now.getFullYear(), now.getMonth() - 1, now.getDate());
+        query.date.$gte = oneMonthAgo;
+      }
+    }
+
+    const incomes = await Income.find(query).sort({ date: -1 });
     res.status(200).json({ success: true, count: incomes.length, data: incomes });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });

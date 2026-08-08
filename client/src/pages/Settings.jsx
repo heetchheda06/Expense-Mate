@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useProfiles } from '../context/ProfileContext';
 import { useToast } from '../context/ToastContext';
-import { Plus, Trash2, Edit2, Check, User, Briefcase, Flame, Sparkles, DollarSign, Target } from 'lucide-react';
+import api from '../services/api';
+import { Plus, Trash2, Edit2, Check, User, Briefcase, Flame, Sparkles, DollarSign, Target, Lock, KeyRound, ShieldCheck, Loader } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const Settings = () => {
@@ -16,6 +17,43 @@ const Settings = () => {
   const [avatar, setAvatar] = useState('Briefcase');
   const [color, setColor] = useState('#4F46E5'); // Default Indigo
   const [monthlyBudget, setMonthlyBudget] = useState('');
+
+  // Password Change States
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmNewPassword, setConfirmNewPassword] = useState('');
+  const [passwordLoading, setPasswordLoading] = useState(false);
+
+  const handleChangePassword = async (e) => {
+    e.preventDefault();
+    if (!currentPassword || !newPassword) {
+      showToast('Please enter your current and new password', 'warning');
+      return;
+    }
+    if (newPassword.length < 6) {
+      showToast('New password must be at least 6 characters', 'warning');
+      return;
+    }
+    if (newPassword !== confirmNewPassword) {
+      showToast('New passwords do not match', 'warning');
+      return;
+    }
+
+    setPasswordLoading(true);
+    try {
+      const res = await api.put('/auth/change-password', { currentPassword, newPassword });
+      if (res.data.success) {
+        showToast('Password changed successfully!', 'success');
+        setCurrentPassword('');
+        setNewPassword('');
+        setConfirmNewPassword('');
+      }
+    } catch (err) {
+      showToast(err.response?.data?.message || 'Failed to change password', 'error');
+    } finally {
+      setPasswordLoading(false);
+    }
+  };
 
   // Icon options
   const avatarOptions = [
@@ -301,8 +339,77 @@ const Settings = () => {
           </AnimatePresence>
         </div>
       </div>
+
+      {/* 2. Security & Password Management Section */}
+      <div className="glass-card p-6 rounded-3xl border border-white/5 mt-4">
+        <div className="flex items-center gap-2 mb-4 text-indigo-400 font-bold text-sm">
+          <ShieldCheck className="w-5 h-5" />
+          <h3 className="text-sm font-bold text-slate-200">Security & Change Password</h3>
+        </div>
+        <form onSubmit={handleChangePassword} className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+          <div className="flex flex-col gap-1.5">
+            <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400 pl-1">Current Password</label>
+            <div className="relative">
+              <Lock className="absolute left-3 top-2.5 w-4 h-4 text-slate-500" />
+              <input
+                type="password"
+                value={currentPassword}
+                onChange={(e) => setCurrentPassword(e.target.value)}
+                placeholder="••••••••"
+                required
+                className="glass-input pl-9 text-xs py-2 w-full"
+              />
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-1.5">
+            <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400 pl-1">New Password</label>
+            <div className="relative">
+              <KeyRound className="absolute left-3 top-2.5 w-4 h-4 text-slate-500" />
+              <input
+                type="password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                placeholder="••••••••"
+                required
+                className="glass-input pl-9 text-xs py-2 w-full"
+              />
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-1.5">
+            <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400 pl-1">Confirm New Password</label>
+            <div className="relative">
+              <KeyRound className="absolute left-3 top-2.5 w-4 h-4 text-slate-500" />
+              <input
+                type="password"
+                value={confirmNewPassword}
+                onChange={(e) => setConfirmNewPassword(e.target.value)}
+                placeholder="••••••••"
+                required
+                className="glass-input pl-9 text-xs py-2 w-full"
+              />
+            </div>
+          </div>
+
+          <div className="md:col-span-3 flex justify-end mt-2">
+            <button
+              type="submit"
+              disabled={passwordLoading}
+              className="btn-primary text-xs font-bold py-2.5 px-6 shadow-glow flex items-center gap-2"
+            >
+              {passwordLoading ? (
+                <Loader className="w-4 h-4 animate-spin" />
+              ) : (
+                <span>Update Password</span>
+              )}
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };
 
 export default Settings;
+

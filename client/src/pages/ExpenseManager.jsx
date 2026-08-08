@@ -19,6 +19,7 @@ const ExpenseManager = () => {
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('');
   const [range, setRange] = useState('');
+  const [selectedMonth, setSelectedMonth] = useState('');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
 
@@ -61,6 +62,7 @@ const ExpenseManager = () => {
       const params = {};
       if (search) params.search = search;
       if (category) params.category = category;
+      if (selectedMonth) params.month = selectedMonth;
       if (range) params.range = range;
       if (startDate) params.startDate = startDate;
       if (endDate) params.endDate = endDate;
@@ -74,7 +76,7 @@ const ExpenseManager = () => {
     } finally {
       setLoading(false);
     }
-  }, [activeProfile, search, category, range, startDate, endDate, showToast]);
+  }, [activeProfile, search, category, selectedMonth, range, startDate, endDate, showToast]);
 
   useEffect(() => {
     fetchExpenses();
@@ -322,14 +324,36 @@ const ExpenseManager = () => {
             <Calendar className="absolute left-3 top-3 w-4 h-4 text-slate-500" />
             <select
               value={range}
-              onChange={(e) => { setRange(e.target.value); setStartDate(''); setEndDate(''); }}
+              onChange={(e) => { 
+                setRange(e.target.value); 
+                setSelectedMonth('');
+                setStartDate(''); 
+                setEndDate(''); 
+              }}
               className="w-full glass-input pl-9 text-xs py-2 appearance-none"
             >
-              <option value="">All Time</option>
+              <option value="">Default Filter</option>
+              <option value="lifetime">Lifetime (All Time)</option>
               <option value="week">Past 7 Days</option>
               <option value="month">Past 30 Days</option>
             </select>
           </div>
+        </div>
+
+        {/* Specific Month Filter */}
+        <div className="flex flex-col gap-1.5">
+          <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Specific Month</label>
+          <input
+            type="month"
+            value={selectedMonth}
+            onChange={(e) => { 
+              setSelectedMonth(e.target.value); 
+              setRange(''); 
+              setStartDate(''); 
+              setEndDate(''); 
+            }}
+            className="w-full glass-input text-xs py-2"
+          />
         </div>
 
         {/* Custom Start Date */}
@@ -338,7 +362,11 @@ const ExpenseManager = () => {
           <input
             type="date"
             value={startDate}
-            onChange={(e) => { setStartDate(e.target.value); setRange(''); }}
+            onChange={(e) => { 
+              setStartDate(e.target.value); 
+              setSelectedMonth('');
+              setRange(''); 
+            }}
             className="w-full glass-input text-xs py-2"
           />
         </div>
@@ -349,7 +377,11 @@ const ExpenseManager = () => {
           <input
             type="date"
             value={endDate}
-            onChange={(e) => { setEndDate(e.target.value); setRange(''); }}
+            onChange={(e) => { 
+              setEndDate(e.target.value); 
+              setSelectedMonth('');
+              setRange(''); 
+            }}
             className="w-full glass-input text-xs py-2"
           />
         </div>

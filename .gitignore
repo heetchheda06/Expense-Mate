@@ -22,6 +22,9 @@ yarn-debug.log*
 yarn-error.log*
 eslint-debug.log*
 
+# Firebase cache
+.firebase/
+
 # IDE/OS files
 .vscode/
 .idea/
