@@ -1,193 +1,101 @@
 # ExpenseMate 💎
 
-ExpenseMate is a modern, production-ready, AI-powered financial tracking and optimization platform for personal budgeting. It supports multi-profile isolation, full ledger bookkeeping, savings goal trackers, client-side receipt OCR scanning, and heuristic or OpenAI-powered budgeting advice.
+ExpenseMate is a modern, production-ready, AI-powered financial tracking and optimization platform for personal budgeting. It supports multi-profile isolation, full ledger bookkeeping, savings goal trackers, client-side receipt OCR scanning, historical expense analytics, and heuristic or OpenAI-powered budgeting advice.
 
 ---
 
 ## 🚀 Key Features
 
-1. **Authentication Shield:** JWT security tokens, hashed password storage (BcryptJS), protected routes, and auto-session recovery.
+1. **Authentication Shield:** JWT security tokens, hashed password storage (BcryptJS), protected routes, auto-session recovery, and secure password reset/forgot password functionality.
 2. **5-Profile Cap System:** Manage up to 5 profiles (e.g. Personal, Dorm Room, Clubs, Projects) per account with custom theme styling, budget bounds, and cascading deletions.
 3. **Client-side OCR Scanner:** Drop or upload receipts to initiate our local `tesseract.js` worker thread, which uses regex matching to parse the Store name, Total Amount, and Date. Pre-populates the ledger form automatically!
-4. **AI recommendation hub:** Runs deep analysis comparing spending thresholds against budgets, identifying high-cost categories (e.g. books or shopping) and suggesting actionable personal saving hacks. Integrates OpenAI GPT-3.5 when an API key is present.
-5. **Ledger Reports Export:** Convert transactions lists into CSV spreadsheets or launch printable PDF ledger sheets immediately from the dashboard.
-6. **Responsive midnight design:** Stunning glassmorphism UI with Outfit & Inter typography, glowing colored border states, collapse sidebars, and fully animated interactive React Chart.js panels.
+4. **AI Recommendation Hub:** Runs deep analysis comparing spending thresholds against budgets, identifying high-cost categories (e.g. books or shopping) and suggesting actionable personal saving hacks. Integrates OpenAI GPT-3.5 when an API key is present.
+5. **Complete Expense History:** Dashboard provides expense insights for the **current month, previous months, and lifetime financial data**, allowing users to analyze their spending patterns over different time periods.
+6. **Historical Financial Analytics:** Users can review past monthly expenses and compare spending trends with their current month's financial activity.
+7. **Ledger Reports Export:** Convert transaction lists into CSV spreadsheets or launch printable PDF ledger sheets immediately from the dashboard.
+8. **Savings Goal Tracking:** Create and monitor financial goals while tracking progress toward saving targets.
+9. **Forgot Password:** Added a secure **Forgot Password** flow that allows users to recover access to their ExpenseMate account when they forget their password.
+10. **Responsive Midnight Design:** Stunning glassmorphism UI with Outfit & Inter typography, glowing colored border states, collapse sidebars, and fully animated interactive React Chart.js panels.
 
 ---
 
-## 📁 Repository Structure
+## 📊 Dashboard & Expense Analytics
 
-```
-expensemate/
-├── client/                     # React + Vite Frontend Client
-│   ├── public/                 # Static assets & icons
-│   ├── src/
-│   │   ├── charts/             # Custom ChartJS templates
-│   │   ├── components/         # Reusable widgets (Sidebar, Skeletons)
-│   │   ├── context/            # Auth, Profile, & Toast systems
-│   │   ├── pages/              # Landing, Auth, Dashboard, Ledger, Goals, Scanner, Settings
-│   │   ├── services/           # Axios interceptors (api.js)
-│   │   ├── index.css           # Global custom classes & Scrollbars
-│   │   └── App.jsx             # React routing table
-│   ├── vercel.json             # SPA redirects configuration
-│   └── package.json
-│
-├── server/                     # Express Node API Server
-│   ├── config/                 # DB connectors
-│   ├── controllers/            # Logic for ledger REST endpoints & AI recommendation rules
-│   ├── middleware/             # Auth checks & Helmet guards
-│   ├── models/                 # Mongoose schemas (User, Profile, Expense, Income, Goal)
-│   ├── routes/                 # Express routing mounts
-│   └── package.json
-│
-├── docker-compose.yml          # Container configuration for client/server/mongo
-├── package.json                # Monorepo command runner
-└── README.md                   # Developer instructions (This document)
-```
+ExpenseMate provides a comprehensive financial dashboard that allows users to understand their spending across different time periods.
+
+### 📅 Current Month
+
+* View total expenses for the current month
+* Analyze spending by category
+* Monitor budgets and financial goals
+* View interactive charts and financial insights
+
+### 📆 Previous Months
+
+* Access expense data from previous months
+* Analyze historical spending patterns
+* Compare previous monthly expenses with current spending
+* Identify changes in spending behavior over time
+
+### ♾️ Lifetime Financial Data
+
+* View complete historical expense data
+* Analyze overall spending trends
+* Track total financial activity across the account
+* Understand long-term spending patterns
+
+The dashboard combines these time-based insights with interactive charts and AI-powered recommendations to help users make better financial decisions.
+
+---
+
+## 🔐 Authentication & Account Recovery
+
+ExpenseMate provides secure authentication and account recovery features.
+
+### Authentication
+
+* JWT-based authentication
+* BcryptJS password hashing
+* Protected routes
+* Automatic session recovery
+* Secure user profiles
+
+### Forgot Password
+
+Users who forget their password can use the **Forgot Password** option available on the login screen to initiate the account recovery process and regain access to their ExpenseMate account.
 
 ---
 
 ## 🛠️ Tech Stack
 
-- **Frontend:** React (Vite), Tailwind CSS, Framer Motion, Axios, React Chart.js 2, Tesseract.js (OCR), Lucide Icons.
-- **Backend:** Node.js, Express.js, MongoDB (Mongoose), JWT, BcryptJS, Helmet (Security headers), Express-Rate-Limit.
-- **Containerization & Deployment:** Docker, Docker Compose, Vercel SPA Configs.
+* **Frontend:** React (Vite), Tailwind CSS, Framer Motion, Axios, React Chart.js 2, Tesseract.js (OCR), Lucide Icons.
+* **Backend:** Node.js, Express.js, MongoDB (Mongoose), JWT, BcryptJS, Helmet (Security headers), Express-Rate-Limit.
+* **AI:** OpenAI GPT-3.5 with a local heuristic recommendation fallback.
+* **Containerization & Deployment:** Docker, Docker Compose, Vercel SPA Configs.
 
 ---
 
-## ⚙️ Environment Configuration
+## ✨ Core Highlights
 
-### Server Environment (`server/.env`)
-Create a `.env` file in `./server` folder:
-```env
-PORT=5000
-NODE_ENV=production
-
-# MongoDB Connection String (Atlas URI)
-MONGODB_URI=mongodb+srv://<username>:<password>@cluster.mongodb.net/expensemate?retryWrites=true&w=majority
-
-# JWT Token Signing Secret
-JWT_SECRET=super_secret_session_token_key_change_me_in_production
-
-# Deployed Frontend domain to satisfy secure CORS headers
-FRONTEND_URL=https://expensemate.vercel.app
-
-# Optional AI Features: OpenAI API Key (falls back to local rules engine if empty)
-OPENAI_API_KEY=your_openai_api_key_here
-```
-
-### Client Environment (`client/.env`)
-Create a `.env` file in `./client` folder:
-```env
-# Dynamic Base API URL pointing to deployed Render/Railway backend
-VITE_API_URL=https://expensemate-backend.onrender.com
-```
-
----
-
-## 📦 Getting Started (Local Development)
-
-### Prerequisites
-- Node.js (version 18 or higher)
-- MongoDB running locally or Atlas Cloud Cluster
-- (Optional) Docker & Docker Compose
-
-### Fast Startup (Root Runner)
-1. Clone this repository into your workspace.
-2. In the root directory, install all client and server node packages:
-   ```bash
-   npm run install-all
-   ```
-3. Boot up the concurrent dev script:
-   ```bash
-   npm run dev
-   ```
-- Frontend will open at `http://localhost:8080`
-- Backend API will listen on `http://localhost:5000`
-
-### Running with Docker Compose
-If you prefer containerized local environments:
-```bash
-docker-compose up --build
-```
-This automatically boots a local MongoDB image, builds the Express container, compiles the React client, and wires them together!
-
----
-
-## 🌐 Production Deployment Steps
-
-### 1. Database (MongoDB Atlas)
-1. Create a free shared cluster on [MongoDB Atlas](https://www.mongodb.com/cloud/atlas).
-2. Whitelist connection access (`0.0.0.0/` for simple server deployment integration).
-3. Copy the cluster connection URI and set it as `MONGODB_URI` in the backend service variables.
-
-### 2. Backend Deployment (Render or Railway)
-1. Connect your GitHub repository to [Render](https://render.com) or [Railway](https://railway.app).
-2. Choose **Web Service** and choose `./server` as the root directory.
-3. Configure the start command as `npm start`.
-4. Add backend environment variables (`PORT`, `NODE_ENV=production`, `MONGODB_URI`, `JWT_SECRET`, `FRONTEND_URL` pointing to your Vercel URL).
-
-### 3. Frontend Deployment (Vercel or Netlify)
-1. Import the repository into [Vercel](https://vercel.com).
-2. Choose the `./client` subdirectory as the root directory.
-3. Choose the build template as **Vite**.
-4. Configure environment variables (`VITE_API_URL` pointing to your deployed backend URL on Render/Railway).
-5. Vercel automatically processes the included `vercel.json` rewrite file to ensure SPA router links work perfectly.
-
-## 🔑 User Authentication & Password Saving Guide
-
-Follow these steps to register, log in, and ensure your credentials are securely saved:
-
-### 1. Registration (New Users)
-1. Navigate to the ExpenseMate application URL: [https://expense-mate-tracker.web.app](https://expense-mate-tracker.web.app)
-2. By default, you will see the **Welcome Back** (Sign In) screen.
-3. Click the **Register Here** link at the bottom of the card to switch to the **Create Account** screen.
-4. Fill in the following fields:
-   * **Full Name:** Enter your name (e.g., Alex Smith).
-   * **Email Address:** Enter your valid email address (e.g., alex@example.com).
-   * **Password:** Create a secure password.
-5. Click **Sign Up**.
-
-### 2. Password Saving Prompt (Crucial Step)
-* Upon clicking **Sign Up** or **Sign In**, your browser (e.g., **Google Chrome**) will detect the credential submission and display a pop-up in the top-right corner or address bar: **"Save password?"** or **"Save password to Google Account?"**.
-* > [!IMPORTANT]
-  > When this Google/browser prompt appears, click **Save**. This ensures Google Password Manager stores your credentials, enabling automated auto-fill for all subsequent logins.
-
-### 3. Log In (Returning Users)
-1. Go to the login screen.
-2. If you saved your password in the step above, Google/your browser will automatically auto-fill your email and password.
-3. If not automatically filled, enter your **Email Address** and **Password** manually.
-4. (Optional) Click the **Eye icon** next to the password input field to toggle password visibility and verify correctness.
-5. Click **Sign In** to log in. You will be redirected to the main dashboard.
-
----
-## 🔑 User Authentication & Password Saving Guide
-
-Follow these steps to register, log in, and ensure your credentials are securely saved:
-
-### 1. Registration (New Users)
-1. Navigate to the ExpenseMate application URL: [https://expense-mate-tracker.web.app](https://expense-mate-tracker.web.app)
-2. By default, you will see the **Welcome Back** (Sign In) screen.
-3. Click the **Register Here** link at the bottom of the card to switch to the **Create Account** screen.
-4. Fill in the following fields:
-   * **Full Name:** Enter your name (e.g., Alex Smith).
-   * **Email Address:** Enter your valid email address (e.g., alex@example.com).
-   * **Password:** Create a secure password.
-5. Click **Sign Up**.
-
-### 2. Password Saving Prompt (Crucial Step)
-* Upon clicking **Sign Up** or **Sign In**, your browser (e.g., **Google Chrome**) will detect the credential submission and display a pop-up in the top-right corner or address bar: **"Save password?"** or **"Save password to Google Account?"**.
-* > [!IMPORTANT]
-  > When this Google/browser prompt appears, click **Save**. This ensures Google Password Manager stores your credentials, enabling automated auto-fill for all subsequent logins.
-
-### 3. Log In (Returning Users)
-1. Go to the login screen.
-2. If you saved your password in the step above, Google/your browser will automatically auto-fill your email and password.
-3. If not automatically filled, enter your **Email Address** and **Password** manually.
-4. (Optional) Click the **Eye icon** next to the password input field to toggle password visibility and verify correctness.
-5. Click **Sign In** to log in. You will be redirected to the main dashboard.
+* 💰 Personal expense & income tracking
+* 👤 Multi-profile financial management
+* 📅 Current month expense analytics
+* 📆 Previous month expense history
+* ♾️ Lifetime financial data
+* 📊 Interactive financial dashboards
+* 🎯 Savings goal tracking
+* 🧾 Receipt scanning with OCR
+* 🤖 AI-powered spending recommendations
+* 🔐 JWT authentication
+* 🔑 Forgot password & account recovery
+* 📄 CSV & PDF financial reports
+* 📈 Interactive Chart.js visualizations
+* 🛡️ Protected API routes
+* 🐳 Dockerized deployment support
+* 📱 Responsive glassmorphism interface
 
 ---
 
 ## ⚖️ License
+
 Licensed under the MIT License. Built securely for personal financial empowerment.
